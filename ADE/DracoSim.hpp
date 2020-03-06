@@ -6,7 +6,7 @@ private:
     //Threading
     //std::thread thread_;
     //std::atomic<bool> exit;
-    //void StartThread();
+    void StartThread();
 public:
     //Initialize the sim with a new PnC
     DracoSim();

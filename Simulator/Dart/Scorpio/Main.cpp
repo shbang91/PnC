@@ -7,6 +7,7 @@
 #include <Utils/IO/IOUtilities.hpp>
 #include <PnC/DracoPnC/DracoInterface.hpp>
 #include <PnC/ScorpioPnC/ScorpioInterface.hpp>
+#include <ADE/DracoSim.hpp>
 
 void displayJointFrames(const dart::simulation::WorldPtr& world,
                         const dart::dynamics::SkeletonPtr& robot) {
@@ -322,7 +323,9 @@ void _SetJointActuatorType(dart::dynamics::SkeletonPtr robot, int actuator_type)
 
 }
 
-int main(int argc, char** argv) {
+int main_copy() {
+    DracoSim s;
+    s.StartSim(nullptr, nullptr);
     // ========================
     // Parse Yaml for Simulator
     // ========================
@@ -339,7 +342,7 @@ int main(int argc, char** argv) {
 
     try {
         YAML::Node simulation_cfg =
-            YAML::LoadFile(THIS_COM "Config/Scorpio/SIMULATION.yaml");
+                YAML::LoadFile(THIS_COM "Config/Scorpio/SIMULATION.yaml");
         myUtils::readParameter(simulation_cfg, "is_record", isRecord);
         myUtils::readParameter(simulation_cfg, "display_joint_frame",
                                b_display_joint_frame);
@@ -367,19 +370,19 @@ int main(int argc, char** argv) {
     dart::simulation::WorldPtr world(new dart::simulation::World);
     dart::utils::DartLoader urdfLoader;
     dart::dynamics::SkeletonPtr ground = urdfLoader.parseSkeleton(
-        THIS_COM "RobotModel/Ground/ground_terrain.urdf");
+            THIS_COM "RobotModel/Ground/ground_terrain.urdf");
     dart::dynamics::SkeletonPtr scorpio = urdfLoader.parseSkeleton(
-        THIS_COM "RobotModel/Robot/Scorpio/Scorpio_Kin.urdf");
+            THIS_COM "RobotModel/Robot/Scorpio/Scorpio_Kin.urdf");
     dart::dynamics::SkeletonPtr scorpio2 = urdfLoader.parseSkeleton(
-        THIS_COM "RobotModel/Robot/Scorpio/Scorpio_Kin2.urdf");
+            THIS_COM "RobotModel/Robot/Scorpio/Scorpio_Kin2.urdf");
     dart::dynamics::SkeletonPtr draco = urdfLoader.parseSkeleton(
-        THIS_COM "RobotModel/Robot/Draco/DracoSim_Dart.urdf");
+            THIS_COM "RobotModel/Robot/Draco/DracoSim_Dart.urdf");
     dart::dynamics::SkeletonPtr table = urdfLoader.parseSkeleton(
-         THIS_COM "RobotModel/Environment/Table/table.urdf");
+            THIS_COM "RobotModel/Environment/Table/table.urdf");
     dart::dynamics::SkeletonPtr table2 = urdfLoader.parseSkeleton(
-         THIS_COM "RobotModel/Environment/Table/table2.urdf");
+            THIS_COM "RobotModel/Environment/Table/table2.urdf");
     dart::dynamics::SkeletonPtr box = urdfLoader.parseSkeleton(
-         THIS_COM "RobotModel/Environment/Box/box.urdf");
+            THIS_COM "RobotModel/Environment/Box/box.urdf");
 
     world->addSkeleton(ground);
     world->addSkeleton(scorpio);
@@ -474,7 +477,7 @@ int main(int argc, char** argv) {
         ::osg::Vec3 p1(1.0, 0.2, 1.0);
         p1 = p1 * 0.5;
         viewer.getLightSource(0)->getLight()->setPosition(
-            ::osg::Vec4(p1[0], p1[1], p1[2], 0.0));
+                ::osg::Vec4(p1[0], p1[1], p1[2], 0.0));
         viewer.getCamera()->setClearColor(osg::Vec4(0.93f, 0.95f, 1.0f, 0.95f));
         viewer.getCamera()->setClearMask(GL_COLOR_BUFFER_BIT |
                                          GL_DEPTH_BUFFER_BIT);
@@ -488,8 +491,8 @@ int main(int argc, char** argv) {
         //viewer.setUpViewInWindow(0, 0, 2880, 1800);
         viewer.setUpViewInWindow(1440, 0, 500, 500);
         viewer.getCameraManipulator()->setHomePosition(
-            ::osg::Vec3(from[0], from[1], from[2]), ::osg::Vec3(to[0], to[1], to[2]),
-            ::osg::Vec3(0.0, 0.0, 1.0));
+                ::osg::Vec3(from[0], from[1], from[2]), ::osg::Vec3(to[0], to[1], to[2]),
+                ::osg::Vec3(0.0, 0.0, 1.0));
         viewer.setCameraManipulator(viewer.getCameraManipulator());
         viewer.run();
     } else {
@@ -497,6 +500,185 @@ int main(int argc, char** argv) {
             node->customPreStep();
             node->getWorld()->step();
             node->customPostStep();
-       }
+        }
     }
 }
+
+//int main(int argc, char** argv) {
+//    // ========================
+//    // Parse Yaml for Simulator
+//    // ========================
+//    bool isRecord;
+//    bool b_display_joint_frame;
+//    bool b_display_target_frame;
+//    bool b_show;
+//    int num_steps_per_cycle;
+//    double servo_rate;
+//    int actuator_type;
+//    Eigen::VectorXd q_init(5);
+//    Eigen::VectorXd from, to;
+//    q_init.setZero();
+//
+//    try {
+//        YAML::Node simulation_cfg =
+//            YAML::LoadFile(THIS_COM "Config/Scorpio/SIMULATION.yaml");
+//        myUtils::readParameter(simulation_cfg, "is_record", isRecord);
+//        myUtils::readParameter(simulation_cfg, "display_joint_frame",
+//                               b_display_joint_frame);
+//        myUtils::readParameter(simulation_cfg, "display_target_frame",
+//                               b_display_target_frame);
+//        myUtils::readParameter(simulation_cfg, "num_steps_per_cycle",
+//                               num_steps_per_cycle);
+//        myUtils::readParameter(simulation_cfg, "servo_rate", servo_rate);
+//        myUtils::readParameter(simulation_cfg, "show_viewer", b_show);
+//        myUtils::readParameter(simulation_cfg, "actuator_type", actuator_type);
+//        myUtils::readParameter(simulation_cfg, "q_init", q_init);
+//        myUtils::readParameter(simulation_cfg, "from", from);
+//        myUtils::readParameter(simulation_cfg, "to", to);
+//        q_init = q_init/180.0*M_PI;
+//
+//    } catch (std::runtime_error& e) {
+//        std::cout << "Error reading parameter [" << e.what() << "] at file: ["
+//                  << __FILE__ << "]" << std::endl
+//                  << std::endl;
+//    }
+//
+//    // ================================
+//    // Generate world and add skeletons
+//    // ================================
+//    dart::simulation::WorldPtr world(new dart::simulation::World);
+//    dart::utils::DartLoader urdfLoader;
+//    dart::dynamics::SkeletonPtr ground = urdfLoader.parseSkeleton(
+//        THIS_COM "RobotModel/Ground/ground_terrain.urdf");
+//    dart::dynamics::SkeletonPtr scorpio = urdfLoader.parseSkeleton(
+//        THIS_COM "RobotModel/Robot/Scorpio/Scorpio_Kin.urdf");
+//    dart::dynamics::SkeletonPtr scorpio2 = urdfLoader.parseSkeleton(
+//        THIS_COM "RobotModel/Robot/Scorpio/Scorpio_Kin2.urdf");
+//    dart::dynamics::SkeletonPtr draco = urdfLoader.parseSkeleton(
+//        THIS_COM "RobotModel/Robot/Draco/DracoSim_Dart.urdf");
+//    dart::dynamics::SkeletonPtr table = urdfLoader.parseSkeleton(
+//         THIS_COM "RobotModel/Environment/Table/table.urdf");
+//    dart::dynamics::SkeletonPtr table2 = urdfLoader.parseSkeleton(
+//         THIS_COM "RobotModel/Environment/Table/table2.urdf");
+//    dart::dynamics::SkeletonPtr box = urdfLoader.parseSkeleton(
+//         THIS_COM "RobotModel/Environment/Box/box.urdf");
+//
+//    world->addSkeleton(ground);
+//    world->addSkeleton(scorpio);
+//    world->addSkeleton(scorpio2);
+//    world->addSkeleton(draco);
+//    world->addSkeleton(table);
+//    world->addSkeleton(table2);
+//    world->addSkeleton(box);
+//
+//
+//    // ==================================
+//    // Friction & Restitution Coefficient
+//    // ==================================
+//    double friction(10.);
+//    double restit(0.0);
+//    ground->getBodyNode("ground_link")->setFrictionCoeff(friction);
+//    draco->getBodyNode("Torso")->setFrictionCoeff(friction);
+//    ground->getBodyNode("ground_link")->setRestitutionCoeff(restit);
+//    draco->getBodyNode("Torso")->setRestitutionCoeff(restit);
+//    draco->getBodyNode("rAnkle")->setFrictionCoeff(friction);
+//    draco->getBodyNode("lAnkle")->setFrictionCoeff(friction);
+//    draco->getBodyNode("lAnkle")->setRestitutionCoeff(restit);
+//    draco->getBodyNode("rAnkle")->setRestitutionCoeff(restit);
+//
+//    Eigen::Vector3d gravity(0.0, 0.0, -9.81);
+//    world->setGravity(gravity);
+//    world->setTimeStep(servo_rate);
+//
+//    // ====================
+//    // Display Joints Frame
+//    // ====================
+//    if (b_display_joint_frame) displayJointFrames(world, scorpio);
+//    if (b_display_joint_frame) displayJointFrames(world, draco);
+//    // ====================
+//    // Display Target Frame
+//    // ====================
+//    if (b_display_target_frame) addTargetFrame(world);
+//
+//    // =====================
+//    // Initial configuration
+//    // =====================
+//    _setInitialConfiguration(scorpio, q_init);
+//    _setInitialConfiguration(scorpio2, q_init);
+//    _setInitialConfiguration(draco);
+//    _setJointLimitConstraint(draco);
+//    _setInitialConfiguration_2(box);
+//
+//    // =====================
+//    // Robot Mesh Color from URDF
+//    // =====================
+//    _SetMeshColorURDF(scorpio);
+//    _SetMeshColorURDF(scorpio2);
+//
+//    // =====================
+//    // Constraint for Closed-Loop
+//    // =====================
+//    _SetJointConstraint(world, scorpio);
+//    _SetJointConstraint(world, scorpio2);
+//
+//    // ================
+//    // Set passive joint
+//    // ================
+//    _SetJointActuatorType(scorpio,actuator_type);
+//    _SetJointActuatorType(scorpio2,actuator_type);
+//
+//    // ================
+//    // Print Model Info
+//    // ================
+//    // _printRobotModel(robot);
+//
+//    // ================
+//    // Wrap a worldnode
+//    // ================
+//    osg::ref_ptr<ScorpioWorldNode> node;
+//    node = new ScorpioWorldNode(world, new DracoInterface(), new ScorpioInterface());
+//
+//    // Reachability node
+//    // osg::ref_ptr<ScorpioWorldNodeReach> node;
+//    // node = new ScorpioWorldNodeReach(world);
+//
+//    node->setNumStepsPerCycle(num_steps_per_cycle);
+//
+//    // =====================
+//    // Create and Set Viewer
+//    // =====================
+//
+//    if (b_show) {
+//        dart::gui::osg::Viewer viewer;
+//        viewer.addWorldNode(node);
+//        viewer.simulate(false);
+//        viewer.switchHeadlights(false);
+//        ::osg::Vec3 p1(1.0, 0.2, 1.0);
+//        p1 = p1 * 0.5;
+//        viewer.getLightSource(0)->getLight()->setPosition(
+//            ::osg::Vec4(p1[0], p1[1], p1[2], 0.0));
+//        viewer.getCamera()->setClearColor(osg::Vec4(0.93f, 0.95f, 1.0f, 0.95f));
+//        viewer.getCamera()->setClearMask(GL_COLOR_BUFFER_BIT |
+//                                         GL_DEPTH_BUFFER_BIT);
+//        viewer.addEventHandler(new OneStepProgress(node));
+//
+//        if (isRecord) {
+//            std::cout << "[Video Record Enable]" << std::endl;
+//            viewer.record(THIS_COM "/ExperimentVideo");
+//        }
+//
+//        //viewer.setUpViewInWindow(0, 0, 2880, 1800);
+//        viewer.setUpViewInWindow(1440, 0, 500, 500);
+//        viewer.getCameraManipulator()->setHomePosition(
+//            ::osg::Vec3(from[0], from[1], from[2]), ::osg::Vec3(to[0], to[1], to[2]),
+//            ::osg::Vec3(0.0, 0.0, 1.0));
+//        viewer.setCameraManipulator(viewer.getCameraManipulator());
+//        viewer.run();
+//    } else {
+//        while (true) {
+//            node->customPreStep();
+//            node->getWorld()->step();
+//            node->customPostStep();
+//       }
+//    }
+//}
