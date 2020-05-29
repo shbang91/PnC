@@ -18,7 +18,7 @@ ScorpioInterface::ScorpioInterface() : EnvInterface() {
     myUtils::pretty_constructor(0, "Scorpio Interface");
 
     robot_ = new RobotSystem(
-        4, THIS_COM "RobotModel/Robot/Scorpio/Scorpio_Kin.urdf");
+        4, THIS_COM "RobotModel/Robot/Scorpio/Scorpio_Kin_robotiq.urdf");
      //robot_->printRobotInfo();
     sp_ = ScorpioStateProvider::getStateProvider(robot_);
 

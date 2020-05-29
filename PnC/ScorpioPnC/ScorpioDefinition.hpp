@@ -1,6 +1,6 @@
 #pragma once
 namespace Scorpio {
-constexpr int n_bodynode = 20;                                                                                                                                                                            
+constexpr int n_bodynode = 28;                                                                                                                                                                            
 constexpr int n_dof = 11;                                                                                                                                                                            
 constexpr int n_vdof = 4;                                                                             
 constexpr int n_adof = 7;

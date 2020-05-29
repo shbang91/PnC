@@ -244,13 +244,14 @@ void OSCPosCtrl::oneStep(void* _cmd) {
  
     Eigen::MatrixXd SN_c_J_q = SN_c_bar.transpose()* J_q_N_end_effector_bar;
 
-    Eigen::JacobiSVD<Eigen::MatrixXd> svd4(
-     SN_c_J_q, Eigen::ComputeThinU | Eigen::ComputeThinV);
-     std::cout << "S_N_J_q" << std::endl; 
-     std::cout << svd4.singularValues() << std::endl;
-     std::cout << "============================" << std::endl;
+    //Eigen::JacobiSVD<Eigen::MatrixXd> svd4(
+     //SN_c_J_q, Eigen::ComputeThinU | Eigen::ComputeThinV);
+     //std::cout << "S_N_J_q" << std::endl; 
+     //std::cout << svd4.singularValues() << std::endl;
+     //std::cout << "============================" << std::endl;
  
     gamma = SN_c_bar.transpose() *(robot_->getMassMatrix() * (qddot_des_end_effector + qddot_des_q) + b_c);
+    //gamma = SN_c_bar.transpose() * b_c;
 
     ((ScorpioCommand*)_cmd)->jtrq = gamma;
 
@@ -263,6 +264,9 @@ void OSCPosCtrl::firstVisit() {
     state_machine_time_= 0.;
     ctrl_count_ = 0;
     ini_pos_ = robot_->getBodyNodeIsometry("end_effector").translation();
+    std::cout << "================" << std::endl;
+    std::cout << ini_pos_ << std::endl;
+    std::cout << "================" << std::endl;
     //TEST
     target_pos_ = ini_pos_;
     //TEST

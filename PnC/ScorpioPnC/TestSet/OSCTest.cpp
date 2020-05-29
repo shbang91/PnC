@@ -28,7 +28,8 @@ void OSCTest::TestInitialization() {
             //cfg_["control_configuration"]["osc_orientation_ctrl"]);
 }
 int OSCTest::_NextPhase(const int& phase) {
-    int nx_phase = phase + 1;
+    //int nx_phase = phase + 1;
+    int nx_phase = phase;
     printf("[OSC TEST] next phase: %d\n", nx_phase);
     //if (phase == NUM_OSC_TEST) {
     //nx_phase = OSC_POS_TEST;

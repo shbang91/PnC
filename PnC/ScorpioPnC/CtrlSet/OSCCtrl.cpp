@@ -65,7 +65,7 @@ void OSCCtrl::_build_constraint_matrix(){
 }
 
 void OSCCtrl::oneStep(void* _cmd) {
-
+    std::cout << "onestep" << std::endl;
     _PreProcessing_Command();
     state_machine_time_ = sp_->curr_time - ctrl_start_time_;
     _task_setup();
@@ -146,6 +146,7 @@ void OSCCtrl::_compute_torque(Eigen::VectorXd & gamma){
 
 
 void OSCCtrl::firstVisit() {
+    std::cout << "move_ctrl" << std::endl;
     state_machine_time_= 0.;
     ctrl_start_time_ = 0.;
     ini_pos_ = robot_->getBodyNodeIsometry("end_effector").translation();

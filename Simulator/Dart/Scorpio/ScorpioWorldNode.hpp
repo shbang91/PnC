@@ -11,8 +11,6 @@
 class EnvInterface;
 class ScorpioSensorData;
 class ScorpioCommand;
-class DracoSensorData;
-class DracoCommand;
 
 class ScorpioWorldNode : public dart::gui::osg::WorldNode {
    private:
@@ -22,15 +20,9 @@ class ScorpioWorldNode : public dart::gui::osg::WorldNode {
     ScorpioCommand* scorpio_cmd_;
 
     void SetParams_();
-    void GetForceTorqueData_();
-
-    EnvInterface* draco_interface_;
-    DracoSensorData* draco_sensordata_;
-    DracoCommand* draco_cmd_;
 
     dart::simulation::WorldPtr world_;
     dart::dynamics::SkeletonPtr scorpio_;
-    dart::dynamics::SkeletonPtr draco_;
     //dart::dynamics::SkeletonPtr mSkel_hsr_;
     dart::dynamics::SkeletonPtr mGround_;
 
@@ -57,15 +49,6 @@ class ScorpioWorldNode : public dart::gui::osg::WorldNode {
     Eigen::VectorXd scorpio_kd_;
     Eigen::VectorXd scorpio_trq_cmd_;
 
-    Eigen::VectorXd draco_kp_;
-    Eigen::VectorXd draco_kd_;
-    Eigen::VectorXd draco_trq_cmd_;
-    bool b_plot_mpc_result_;
-
-    int draco_n_dof_;
-
-    //Eigen::VectorXd cmd_hsr_;
-
     int count_;
     int sim_case_;
     int control_type_;
@@ -73,9 +56,7 @@ class ScorpioWorldNode : public dart::gui::osg::WorldNode {
     int n_dof_scorpio_;
     int a_dof_scorpio_;
     int p_dof_scorpio_;
-    //int n_dof_hsr_;
     int actuator_type_;
-    //int actuator_type_hsr_;
     double t_;
 
     Eigen::VectorXd a_joint_idx_scorpio_;
@@ -89,8 +70,6 @@ class ScorpioWorldNode : public dart::gui::osg::WorldNode {
 
     void SetJointSpaceControlCmd(int ctrl_case);
     void SetOperationalSpaceControlCmd(int ctrl_case);
-    void GetContactSwitchData_(bool&, bool&);
-    void PlotMPCResult_();
    public:
     ScorpioWorldNode(const dart::simulation::WorldPtr& world);
     virtual ~ScorpioWorldNode();

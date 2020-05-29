@@ -1,5 +1,5 @@
 test_configuration:
-    moving_duration: 2.
+    moving_duration: 8.
 
 control_configuration:
     osc_ctrl:

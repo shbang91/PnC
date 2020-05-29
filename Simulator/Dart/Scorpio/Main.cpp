@@ -110,7 +110,7 @@ void _setInitialConfiguration(dart::dynamics::SkeletonPtr robot, Eigen::VectorXd
     Eigen::VectorXd conf_init(robot->getNumDofs());
     conf_init.setZero();
 
-    int mode_init(1);
+    int mode_init(0);
 
     switch(mode_init){
         case 0:{
@@ -137,79 +137,25 @@ void _setInitialConfiguration(dart::dynamics::SkeletonPtr robot, Eigen::VectorXd
 
     robot->setPositions(conf_init);
 
-    std::cout<<"======================================================"<<std::endl;
-    std::cout<<"***** joint initialized, DOF: "<< robot->getNumDofs()<<std::endl;
-    std::cout<<"(1) Yaw joint 1: "<< robot->getDof("joint1")->getIndexInSkeleton() <<std::endl;
-    std::cout<<"(2) Elev1 joint 1: "<< robot->getDof("joint2")->getIndexInSkeleton() <<std::endl;
-    std::cout<<"(3) Elev1 joint 2: "<< robot->getDof("joint3")->getIndexInSkeleton() <<std::endl;
-    std::cout<<"(4) Elev1 joitn 3: "<< robot->getDof("joint4")->getIndexInSkeleton() <<std::endl;
-    std::cout<<"(5) Yaw joint 2: "<< robot->getDof("joint5")->getIndexInSkeleton() <<std::endl;
-    std::cout<<"(6) Elev2 joint 1: "<< robot->getDof("joint6")->getIndexInSkeleton() <<std::endl;
-    std::cout<<"(7) Elev2 joint 2: "<< robot->getDof("joint7")->getIndexInSkeleton() <<std::endl;
-    std::cout<<"(8) Elev2 joint 3: "<< robot->getDof("joint8")->getIndexInSkeleton() <<std::endl;
-    std::cout<<"(9) Wrist Skew : "<< robot->getDof("joint9")->getIndexInSkeleton() <<std::endl;
-    std::cout<<"(10) Wrist Pitch: "<< robot->getDof("joint10")->getIndexInSkeleton() <<std::endl;
-    std::cout<<"(11) Wrist Roll: " << robot->getDof("joint11")->getIndexInSkeleton() <<std::endl;
-    Eigen::Vector3d end_pos_init = robot->getBodyNode("end_effector")->getTransform().translation();
-    myUtils::pretty_print(end_pos_init, std::cout , "<1> end effector pos");
-    std::cout<<"======================================================"<<std::endl;
+    //std::cout<<"======================================================"<<std::endl;
+    //std::cout<<"***** joint initialized, DOF: "<< robot->getNumDofs()<<std::endl;
+    //std::cout<<"(1) Yaw joint 1: "<< robot->getDof("joint1")->getIndexInSkeleton() <<std::endl;
+    //std::cout<<"(2) Elev1 joint 1: "<< robot->getDof("joint2")->getIndexInSkeleton() <<std::endl;
+    //std::cout<<"(3) Elev1 joint 2: "<< robot->getDof("joint3")->getIndexInSkeleton() <<std::endl;
+    //std::cout<<"(4) Elev1 joitn 3: "<< robot->getDof("joint4")->getIndexInSkeleton() <<std::endl;
+    //std::cout<<"(5) Yaw joint 2: "<< robot->getDof("joint5")->getIndexInSkeleton() <<std::endl;
+    //std::cout<<"(6) Elev2 joint 1: "<< robot->getDof("joint6")->getIndexInSkeleton() <<std::endl;
+    //std::cout<<"(7) Elev2 joint 2: "<< robot->getDof("joint7")->getIndexInSkeleton() <<std::endl;
+    //std::cout<<"(8) Elev2 joint 3: "<< robot->getDof("joint8")->getIndexInSkeleton() <<std::endl;
+    //std::cout<<"(9) Wrist Skew : "<< robot->getDof("joint9")->getIndexInSkeleton() <<std::endl;
+    //std::cout<<"(10) Wrist Pitch: "<< robot->getDof("joint10")->getIndexInSkeleton() <<std::endl;
+    //std::cout<<"(11) Wrist Roll: " << robot->getDof("joint11")->getIndexInSkeleton() <<std::endl;
+    //Eigen::Vector3d end_pos_init = robot->getBodyNode("end_effector")->getTransform().translation();
+    //myUtils::pretty_print(end_pos_init, std::cout , "<1> end effector pos");
+    //std::cout<<"======================================================"<<std::endl;
 
 }
 
-void _setInitialConfiguration(dart::dynamics::SkeletonPtr robot) {
-    int lKneeIdx = robot->getDof("lKnee")->getIndexInSkeleton();
-    int lHipPitchIdx = robot->getDof("lHipPitch")->getIndexInSkeleton();
-    int rKneeIdx = robot->getDof("rKnee")->getIndexInSkeleton();
-    int rHipPitchIdx = robot->getDof("rHipPitch")->getIndexInSkeleton();
-    int lAnkleIdx = robot->getDof("lAnkle")->getIndexInSkeleton();
-    int rAnkleIdx = robot->getDof("rAnkle")->getIndexInSkeleton();
-
-    int initPos(1);  // 0 : Home, 1 : Simulation, 2 : Experiment
-    Eigen::VectorXd q = robot->getPositions();
-
-    switch (initPos) {
-        case 0: {
-            q[2] = 1.425;
-            q[lAnkleIdx] = 0.;
-            q[rAnkleIdx] = 0.;
-            // q[lAnkleIdx] = M_PI/2;
-            // q[rAnkleIdx] = M_PI/2;
-            break;
-        }
-        case 1: {
-            //q[0] = 2.5;
-            //q[3] = M_PI;
-            q[2] = 0.9;
-            double alpha(-M_PI / 4.);
-            double beta(M_PI / 5.5);
-            q[lHipPitchIdx] = alpha;
-            q[lKneeIdx] = beta - alpha;
-            q[rHipPitchIdx] = alpha;
-            q[rKneeIdx] = beta - alpha;
-            q[lAnkleIdx] = M_PI / 2 - beta;
-            q[rAnkleIdx] = M_PI / 2 - beta;
-            break;
-        }
-        case 2: {
-            YAML::Node simulation_cfg =
-                YAML::LoadFile(THIS_COM "Config/Draco/SIMULATION.yaml");
-            double hanging_height(0.0);
-            myUtils::readParameter(simulation_cfg, "hanging_height",
-                                   hanging_height);
-            Eigen::VectorXd init_config;
-            myUtils::readParameter(simulation_cfg, "initial_configuration",
-                                   init_config);
-            q[2] = hanging_height;
-            q.tail(10) = init_config;
-            break;
-        }
-        default:
-            std::cout << "[wrong initial pos case] in Draco/Main.cpp"
-                      << std::endl;
-    }
-
-    robot->setPositions(q);
-}
 void _SetMeshColorURDF(dart::dynamics::SkeletonPtr robot){
 	for(size_t i=0; i < robot->getNumBodyNodes(); ++i)
 	{
@@ -242,6 +188,8 @@ void _SetJointConstraint(dart::simulation::WorldPtr & world, dart::dynamics::Ske
     dart::dynamics::BodyNode* bd2 = robot->getBodyNode("link4_end");
    Eigen::Vector3d offset(0.09, 0.1225, -0.034975);
     Eigen::Vector3d joint_pos1 = bd1->getTransform()*offset;
+    std::cout << "jpos1" << std::endl;
+    std::cout << joint_pos1 << std::endl;
     dart::constraint::BallJointConstraintPtr cl1 =
         std::make_shared<dart::constraint::BallJointConstraint>(bd1,bd2,joint_pos1);
 
@@ -251,6 +199,8 @@ void _SetJointConstraint(dart::simulation::WorldPtr & world, dart::dynamics::Ske
     dart::dynamics::BodyNode* bd3 = robot->getBodyNode("link5");
     dart::dynamics::BodyNode* bd4 = robot->getBodyNode("link8_end");
     Eigen::Vector3d joint_pos2 = bd3->getTransform()*offset;
+    std::cout << "jpos2" << std::endl;
+    std::cout << joint_pos2 << std::endl;
     dart::constraint::BallJointConstraintPtr cl2 =
         std::make_shared<dart::constraint::BallJointConstraint>(bd3,bd4,joint_pos2);
 
@@ -357,31 +307,13 @@ int main(int argc, char** argv) {
     dart::dynamics::SkeletonPtr ground = urdfLoader.parseSkeleton(
         THIS_COM "RobotModel/Ground/ground_terrain.urdf");
     dart::dynamics::SkeletonPtr scorpio = urdfLoader.parseSkeleton(
-        THIS_COM "RobotModel/Robot/Scorpio/Scorpio_Kin.urdf");
-    dart::dynamics::SkeletonPtr draco = urdfLoader.parseSkeleton(
-        THIS_COM "RobotModel/Robot/Draco/DracoSim_Dart.urdf");
+        THIS_COM "RobotModel/Robot/Scorpio/Scorpio_Kin_robotiq.urdf");
     dart::dynamics::SkeletonPtr table = urdfLoader.parseSkeleton(
          THIS_COM "RobotModel/Environment/Table/table.urdf");
 
     world->addSkeleton(ground);
     world->addSkeleton(scorpio);
-    world->addSkeleton(draco);
     world->addSkeleton(table);
-
-
-    // ==================================
-    // Friction & Restitution Coefficient
-    // ==================================
-    double friction(10.);
-    double restit(0.0);
-    ground->getBodyNode("ground_link")->setFrictionCoeff(friction);
-    draco->getBodyNode("Torso")->setFrictionCoeff(friction);
-    ground->getBodyNode("ground_link")->setRestitutionCoeff(restit);
-    draco->getBodyNode("Torso")->setRestitutionCoeff(restit);
-    draco->getBodyNode("rAnkle")->setFrictionCoeff(friction);
-    draco->getBodyNode("lAnkle")->setFrictionCoeff(friction);
-    draco->getBodyNode("lAnkle")->setRestitutionCoeff(restit);
-    draco->getBodyNode("rAnkle")->setRestitutionCoeff(restit);
 
     Eigen::Vector3d gravity(0.0, 0.0, -9.81);
     world->setGravity(gravity);
@@ -400,8 +332,6 @@ int main(int argc, char** argv) {
     // Initial configuration
     // =====================
     _setInitialConfiguration(scorpio, q_init);
-    _setInitialConfiguration(draco);
-    _setJointLimitConstraint(draco);
 
     // =====================
     // Robot Mesh Color from URDF
@@ -428,11 +358,6 @@ int main(int argc, char** argv) {
     // ================
     osg::ref_ptr<ScorpioWorldNode> node;
     node = new ScorpioWorldNode(world);
-
-    // Reachability node
-    // osg::ref_ptr<ScorpioWorldNodeReach> node;
-    // node = new ScorpioWorldNodeReach(world);
-
     node->setNumStepsPerCycle(30);
 
     // =====================
