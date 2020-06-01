@@ -121,7 +121,8 @@ void OSCPosCtrl::oneStep(void* _cmd) {
      //std::cout << svd2.singularValues() << std::endl;
      //std::cout << "============================" << std::endl;
 
-    Eigen::MatrixXd b_c = N_c.transpose() * (robot_->getCoriolisGravity());
+    //Eigen::MatrixXd b_c = N_c.transpose() * (robot_->getCoriolisGravity());
+    Eigen::MatrixXd b_c =  (robot_->getCoriolisGravity());
 
     Eigen::MatrixXd SN_c = S * N_c;
     //PRINT
@@ -197,10 +198,16 @@ void OSCPosCtrl::oneStep(void* _cmd) {
 
     ori_err_data_ = end_effector_ori_error;
     //Done saving Data
-
+    
+    //TEST
+    //Eigen::MatrixXd J_end_effector = robot_->getBodyNodeJacobian("end_effector").block(3,0,3,robot_->getNumDofs());
+    ////J_end_effector = J_end_effector* N_c;
+    //Eigen::MatrixXd J_end_effector_bar = Eigen::MatrixXd::Zero(robot_->getNumDofs(),3);
+    //myUtils::weightedInverse(J_end_effector,robot_->getInvMassMatrix(),J_end_effector_bar);
+    //TEST
 
     Eigen::MatrixXd J_end_effector = robot_->getBodyNodeJacobian("end_effector");
-    //J_end_effector = J_end_effector* N_c;
+    J_end_effector = J_end_effector* N_c;
     Eigen::MatrixXd J_end_effector_bar = Eigen::MatrixXd::Zero(robot_->getNumDofs(),6);
     myUtils::weightedInverse(J_end_effector,robot_->getInvMassMatrix(),J_end_effector_bar);
 
@@ -210,11 +217,11 @@ void OSCPosCtrl::oneStep(void* _cmd) {
      //std::cout << svd.singularValues() << std::endl;
      //std::cout << "============================" << std::endl;
 
-     //Eigen::JacobiSVD<Eigen::MatrixXd> svd1(
-     //J_end_effector_bar, Eigen::ComputeThinU | Eigen::ComputeThinV);
-     //std::cout << " J_end_effector_bar" << std::endl; 
-     //std::cout << svd1.singularValues() << std::endl;
-     //std::cout << "============================" << std::endl;
+     Eigen::JacobiSVD<Eigen::MatrixXd> svd1(
+     J_end_effector_bar, Eigen::ComputeThinU | Eigen::ComputeThinV);
+     std::cout << " J_end_effector_bar" << std::endl; 
+     std::cout << svd1.singularValues() << std::endl;
+     std::cout << "============================" << std::endl;
     
     Eigen::MatrixXd N_end_effector = Eigen::MatrixXd::Identity(Scorpio::n_dof,Scorpio::n_dof) - J_end_effector_bar * J_end_effector; 
     Eigen::VectorXd qddot_des_end_effector = Eigen::VectorXd::Zero(robot_->getNumDofs());
@@ -236,23 +243,23 @@ void OSCPosCtrl::oneStep(void* _cmd) {
 
     qddot_des_q = J_q_N_end_effector_bar * (joint_des_acc); 
 
-     //Eigen::JacobiSVD<Eigen::MatrixXd> svd3(
-     //J_end_effector, Eigen::ComputeThinU | Eigen::ComputeThinV);
-     //std::cout << " J_q_N_end_effector" << std::endl;
-     //std::cout << svd3.singularValues() << std::endl;
-     //std::cout << "============================" << std::endl;
+     Eigen::JacobiSVD<Eigen::MatrixXd> svd3(
+     J_end_effector, Eigen::ComputeThinU | Eigen::ComputeThinV);
+     std::cout << " J_q_N_end_effector" << std::endl;
+     std::cout << svd3.singularValues() << std::endl;
+     std::cout << "============================" << std::endl;
  
     Eigen::MatrixXd SN_c_J_q = SN_c_bar.transpose()* J_q_N_end_effector_bar;
 
-    //Eigen::JacobiSVD<Eigen::MatrixXd> svd4(
-     //SN_c_J_q, Eigen::ComputeThinU | Eigen::ComputeThinV);
-     //std::cout << "S_N_J_q" << std::endl; 
-     //std::cout << svd4.singularValues() << std::endl;
-     //std::cout << "============================" << std::endl;
+    Eigen::JacobiSVD<Eigen::MatrixXd> svd4(
+     SN_c_J_q, Eigen::ComputeThinU | Eigen::ComputeThinV);
+     std::cout << "S_N_J_q" << std::endl; 
+     std::cout << svd4.singularValues() << std::endl;
+     std::cout << "============================" << std::endl;
  
-    gamma = SN_c_bar.transpose() *(robot_->getMassMatrix() * (qddot_des_end_effector + qddot_des_q) + b_c);
-    //gamma = SN_c_bar.transpose() * b_c;
-
+    //gamma = SN_c_bar.transpose() *(N_c.transpose()*robot_->getMassMatrix() * (qddot_des_end_effector + qddot_des_q) + b_c);
+    gamma = SN_c_bar.transpose() * b_c;
+    //gamma.setZero();
     ((ScorpioCommand*)_cmd)->jtrq = gamma;
 
     ++ctrl_count_;
@@ -276,6 +283,10 @@ void OSCPosCtrl::firstVisit() {
     ini_pos_q = robot_->getQ();
     ini_vel_q = robot_->getQdot();
     ini_ori_ = Eigen::Quaternion<double> (robot_->getBodyNodeIsometry("end_effector").linear());
+    std::cout << ini_ori_.w() << std::endl;
+    std::cout << ini_ori_.x() << std::endl;
+    std::cout << ini_ori_.y() << std::endl;
+    std::cout << ini_ori_.z() << std::endl;
     //ori_err_ = dart::math::quatToExp(target_ori_*(ini_ori_.inverse()));
     // TEST
     ori_err_.setZero();
