@@ -1,13 +1,13 @@
 test_configuration:
     xyz_duration: 10.
     #end_effector_target_pos: [0.5, -0.8 , 1.5]
-    end_effector_target_pos: [-0.3, -0.8 , 1.6]
+    end_effector_target_pos: [-0.31, 0.34 , 1.39]
     end_effector_target_ori: [0,0.7071,0,0.7071]
 
 control_configuration:
     osc_position_ctrl:
-        end_effector_kp: [110,110,110,110,110,110]
-        end_effector_kd: [25,25,25,25,25,25]
-        q_kp: [0.5, 0.5 , 0.5 , 0.5 ,  0.5 , 0.5 , 0.5 ]        
+        end_effector_kp: [100,100,100,100,100,100]
+        end_effector_kd: [20,20,20,20,20,20]
+        q_kp: [1, 1 , 1 , 1 ,  1 , 1 , 1 ]        
         q_kd: [0   , 0   , 0   , 0   ,  0   , 0   , 0]   
 

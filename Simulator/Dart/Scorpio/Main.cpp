@@ -110,11 +110,12 @@ void _setInitialConfiguration(dart::dynamics::SkeletonPtr robot, Eigen::VectorXd
     Eigen::VectorXd conf_init(robot->getNumDofs());
     conf_init.setZero();
 
-    int mode_init(0);
+    int mode_init(1);
 
     switch(mode_init){
         case 0:{
             conf_init.setZero();
+            std::cout << "case 0 initial config" << std::endl;
             break;
         }
         case 1:{
@@ -127,10 +128,14 @@ void _setInitialConfiguration(dart::dynamics::SkeletonPtr robot, Eigen::VectorXd
             conf_init[6] = -q_init[3];
             conf_init[7] = q_init[3];
             conf_init[8] = q_init[4];
+            conf_init[9] = q_init[5];
+            conf_init[10] = q_init[6];
+            std::cout << "case 1 initial config" << std::endl;
             break;
         }
         default:{
             conf_init.setZero();
+            std::cout << "default initla config" << std::endl;
             break;
         }
     }
@@ -274,7 +279,7 @@ int main(int argc, char** argv) {
     int num_steps_per_cycle;
     double servo_rate;
     int actuator_type;
-    Eigen::VectorXd q_init(5);
+    Eigen::VectorXd q_init(7);
     q_init.setZero();
 
     try {

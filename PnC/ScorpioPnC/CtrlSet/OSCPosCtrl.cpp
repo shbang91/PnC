@@ -238,11 +238,17 @@ void OSCPosCtrl::oneStep(void* _cmd) {
     Eigen::MatrixXd SN_c_J_q = SN_c_bar.transpose()* J_q_N_end_effector_bar;
 
     Eigen::JacobiSVD<Eigen::MatrixXd> svd5(
-     SN_c_bar * J_end_effector_bar, Eigen::ComputeThinU | Eigen::ComputeThinV);
-     std::cout << "S_Nc_J_end_bar" << std::endl; 
+     J_end_effector * SN_c.transpose(), Eigen::ComputeThinU | Eigen::ComputeThinV);
+     std::cout << "J_end_SN_c_transpose" << std::endl; 
      std::cout << svd5.singularValues() << std::endl;
      std::cout << "============================" << std::endl;
-     
+
+     Eigen::JacobiSVD<Eigen::MatrixXd> svd6(
+     J_q_N_end_effector * SN_c.transpose(), Eigen::ComputeThinU | Eigen::ComputeThinV);
+     std::cout << "posture task feasibility" << std::endl; 
+     std::cout << svd6.singularValues() << std::endl;
+     std::cout << "============================" << std::endl;
+
     Eigen::JacobiSVD<Eigen::MatrixXd> svd4(
      SN_c_J_q, Eigen::ComputeThinU | Eigen::ComputeThinV);
      std::cout << "S_N_J_q" << std::endl; 
@@ -265,22 +271,24 @@ void OSCPosCtrl::firstVisit() {
     state_machine_time_= 0.;
     ctrl_count_ = 0;
     ini_pos_ = robot_->getBodyNodeIsometry("end_effector").translation();
-    std::cout << "================" << std::endl;
-    std::cout << ini_pos_ << std::endl;
-    std::cout << "================" << std::endl;
     //TEST
     //target_pos_ = ini_pos_;
     //TEST
     ini_vel_ = robot_->getBodyNodeSpatialVelocity("end_effector").tail(3); 
+    //std::cout << "=========================" << std::endl;
     //std::cout << "initial end effector pos" << std::endl;
     //std::cout << ini_pos_ << std::endl;
+    //std::cout << "=========================" << std::endl;
     ini_pos_q = robot_->getQ();
     ini_vel_q = robot_->getQdot();
     ini_ori_ = Eigen::Quaternion<double> (robot_->getBodyNodeIsometry("end_effector").linear());
-    std::cout << ini_ori_.w() << std::endl;
-    std::cout << ini_ori_.x() << std::endl;
-    std::cout << ini_ori_.y() << std::endl;
-    std::cout << ini_ori_.z() << std::endl;
+    //std::cout << "=========================" << std::endl;
+    //std::cout << "initial end effector ori" << std::endl;
+    //std::cout << ini_ori_.w() << std::endl;
+    //std::cout << ini_ori_.x() << std::endl;
+    //std::cout << ini_ori_.y() << std::endl;
+    //std::cout << ini_ori_.z() << std::endl;
+    //std::cout << "=========================" << std::endl;
     ori_err_ = dart::math::quatToExp(target_ori_*(ini_ori_.inverse()));
     // TEST
     //ori_err_.setZero();
