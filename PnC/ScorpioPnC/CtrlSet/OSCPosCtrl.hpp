@@ -29,6 +29,11 @@ class OSCPosCtrl : public Controller {
     int ctrl_count_;
     int task_dim_;
     std::vector<int> active_joint_idx_;
+
+    void _build_active_joint_idx();
+    void _build_constraint_matrix();
+    Eigen::MatrixXd Jc_;
+
     Eigen::VectorXd target_pos_;
     Eigen::VectorXd ini_pos_;
     Eigen::VectorXd ini_vel_;

@@ -14,6 +14,12 @@ OSCCtrl::OSCCtrl(RobotSystem* _robot) : Controller(_robot) {
     end_time_ = 0;
 
     target_pos_ = Eigen::VectorXd::Zero(3);
+    //target_pos_[0] = 0.3;
+    //target_pos_[1] = -0.8; 
+    //target_pos_[2] = 1.4;
+    target_pos_[0] = 0.2;
+    target_pos_[1] = -1; 
+    target_pos_[2] = 1.4;
     ini_pos_ = Eigen::VectorXd::Zero(3);
     ini_pos_q_ = Eigen::VectorXd::Zero(robot_->getNumDofs());
     q_kp_ = Eigen::VectorXd::Zero(Scorpio::n_adof);
@@ -65,7 +71,6 @@ void OSCCtrl::_build_constraint_matrix(){
 }
 
 void OSCCtrl::oneStep(void* _cmd) {
-    std::cout << "onestep" << std::endl;
     _PreProcessing_Command();
     state_machine_time_ = sp_->curr_time - ctrl_start_time_;
     _task_setup();
@@ -150,6 +155,8 @@ void OSCCtrl::firstVisit() {
     state_machine_time_= 0.;
     ctrl_start_time_ = 0.;
     ini_pos_ = robot_->getBodyNodeIsometry("end_effector").translation();
+    std::cout << "====ini_ef_pos=====" << std::endl;
+    std::cout << ini_pos_ << std::endl;
     ini_pos_q_ = robot_->getQ();
     ini_ori_ = Eigen::Quaternion<double> (robot_->getBodyNodeIsometry("end_effector").linear());
 }

@@ -59,7 +59,7 @@ void OSC::makeTorque(const std::vector<Task*> & task_list,
         N_pre = Eigen::MatrixXd::Identity(num_qdot_, num_qdot_)
             - JtPreBar * JtPre;
         task->getCommand(xddot);
-        qddot_des = JtPreBar * xddot;
+        qddot_des += JtPreBar * xddot;
     }
 
     if (false) {

@@ -62,7 +62,8 @@ namespace myUtils {
                          Eigen::MatrixXd & Jinv) {
             Eigen::MatrixXd lambda(J* Winv * J.transpose());
             Eigen::MatrixXd lambda_inv;
-            myUtils::pseudoInverse(lambda, 0.0001, lambda_inv);
+            //myUtils::pseudoInverse(lambda, 0.0001, lambda_inv);
+            myUtils::pseudoInverse(lambda, 0.00005, lambda_inv);
             Jinv = Winv * J.transpose() * lambda_inv;
     }
 

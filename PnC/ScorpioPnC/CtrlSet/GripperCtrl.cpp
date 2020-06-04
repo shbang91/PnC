@@ -58,7 +58,6 @@ void GripperCtrl::_build_constraint_matrix(){
 }
 
 void GripperCtrl::oneStep(void* _cmd) {
-
     _PreProcessing_Command();
     state_machine_time_ = sp_->curr_time - ctrl_start_time_;
     _task_setup();
@@ -104,9 +103,11 @@ void GripperCtrl::lastVisit() {
 }
 
 bool GripperCtrl::endOfPhase() {
-    if (sp_->is_moving) {
+    if (state_machine_time_ > 1.)
         return true;
-    }
+    //if (sp_->is_moving) {
+        //return true;
+    //}
     return false;
 }
 
