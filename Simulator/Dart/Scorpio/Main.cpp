@@ -191,7 +191,9 @@ void _setJointLimitConstraint(dart::dynamics::SkeletonPtr robot) {
 void _SetJointConstraint(dart::simulation::WorldPtr & world, dart::dynamics::SkeletonPtr robot){
     dart::dynamics::BodyNode* bd1 = robot->getBodyNode("link1");
     dart::dynamics::BodyNode* bd2 = robot->getBodyNode("link4_end");
-   Eigen::Vector3d offset(0.09, 0.1225, -0.034975);
+   //Eigen::Vector3d offset(0.09, 0.1225, -0.034975);
+   Eigen::Vector3d offset(0.09, 0.065, -0.035);
+   //Eigen::Vector3d offset(0.09, 0.065, -0.040025);
     Eigen::Vector3d joint_pos1 = bd1->getTransform()*offset;
     std::cout << "jpos1" << std::endl;
     std::cout << joint_pos1 << std::endl;

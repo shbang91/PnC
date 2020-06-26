@@ -56,3 +56,5 @@ Status_Display.cpp
 add_executable(Status_Display ${sources} ${headers})
 # add_dependencies(Status_Display comm_comm)
 target_link_libraries(Status_Display pthread)
+
+install(FILES ${headers} DESTINATION "/usr/local/include/PnC/Addition/DataManager")
