@@ -57,4 +57,7 @@ class ScorpioInterface : public EnvInterface {
     ScorpioInterface();
     virtual ~ScorpioInterface();
     virtual void getCommand(void* _sensor_data, void* _command_data);
+
+    void moveEndEffectorTo(double x, double y, double z, double quat_w, double quat_x, double quat_y, double quat_z);
+
 };

@@ -58,7 +58,6 @@ void ScorpioInterface::getCommand(void* _data, void* _command) {
     running_time_ = (double)(count_)*ScorpioAux::ServoRate;
     sp_->curr_time = running_time_;
     sp_->phase_copy = test_->getPhase();
-
 }
 
 void ScorpioInterface::_ParameterSetting() {
@@ -102,3 +101,16 @@ bool ScorpioInterface::Initialization_(ScorpioSensorData* _sensor_data,
     return false;
 }
 
+void ScorpioInterface::moveEndEffectorTo(double x, double y, double z, double quat_w, double quat_x, double quat_y, double quat_z)
+{
+    //std::cout << "Move End-Effector to pos: " << x<< ","<< y << "," << z << ", ori: "
+       //<< quat_w << ","<< quat_x << "," << quat_y << "," << quat_z << std::endl;
+    
+  Eigen::VectorXd pos = Eigen::VectorXd::Zero(3);
+  pos << x,y,z;
+
+  Eigen::VectorXd ori = Eigen::VectorXd::Zero(4);
+  ori << quat_w, quat_x, quat_y, quat_z;
+
+    ((OSCTest*)test_)->_resetMoveParameters(pos,ori);
+}

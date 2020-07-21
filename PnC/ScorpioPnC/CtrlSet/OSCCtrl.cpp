@@ -12,14 +12,7 @@
 OSCCtrl::OSCCtrl(RobotSystem* _robot) : Controller(_robot) {
     myUtils::pretty_constructor(2, "OSC POS Ctrl");
     end_time_ = 0;
-
     target_pos_ = Eigen::VectorXd::Zero(3);
-    //target_pos_[0] = 0.3;
-    //target_pos_[1] = -0.8; 
-    //target_pos_[2] = 1.4;
-    target_pos_[0] = 0.2;
-    target_pos_[1] = -1; 
-    target_pos_[2] = 1.4;
     ini_pos_ = Eigen::VectorXd::Zero(3);
     ini_pos_q_ = Eigen::VectorXd::Zero(robot_->getNumDofs());
     q_kp_ = Eigen::VectorXd::Zero(Scorpio::n_adof);
@@ -37,7 +30,12 @@ OSCCtrl::OSCCtrl(RobotSystem* _robot) : Controller(_robot) {
     sp_ = ScorpioStateProvider::getStateProvider(_robot);
 }
 
-OSCCtrl::~OSCCtrl() {}
+OSCCtrl::~OSCCtrl() {
+    delete ee_pos_task_;
+    delete ee_ori_task_;
+    delete joint_task_;
+    delete osc_;
+}
 
 void OSCCtrl::_build_active_joint_idx(){
     active_joint_idx_.resize(Scorpio::n_adof);
@@ -153,7 +151,7 @@ void OSCCtrl::_compute_torque(Eigen::VectorXd & gamma){
 void OSCCtrl::firstVisit() {
     std::cout << "move_ctrl" << std::endl;
     state_machine_time_= 0.;
-    ctrl_start_time_ = 0.;
+    ctrl_start_time_ = sp_->curr_time;
     ini_pos_ = robot_->getBodyNodeIsometry("end_effector").translation();
     std::cout << "====ini_ef_pos=====" << std::endl;
     std::cout << ini_pos_ << std::endl;

@@ -1,5 +1,7 @@
 test_configuration:
-    moving_duration: 8.
+    moving_duration: 5.
+    end_effector_target_pos: [-0.3, -0.8 , 1.5]
+    end_effector_target_ori: [0,0.7071,0,0.7071]
 
 control_configuration:
     osc_ctrl:
@@ -9,14 +11,13 @@ control_configuration:
         #ori_kd: [10.  , 10.  , 10.]
         #q_kp: [100    , 100  , 100 , 100 , 100 , 100 , 100 ]
         #q_kd: [10     , 10   , 10  , 10  , 10  , 10  , 10]
-
-        lin_kp: [10. , 10. , 10.]
-        lin_kd: [1.  , 1.  , 1.]
-        ori_kp: [10. , 10. , 10.]
-        ori_kd: [1.  , 1.  , 1.]
+        lin_kp: [200. , 200. , 200.]
+        lin_kd: [50.  , 50.  , 50.]
+        ori_kp: [200. , 200. , 200.]
+        ori_kd: [50.  , 50.  , 50.]
         q_kp: [0    , 0  , 0 , 0 , 0 , 0 , 0 ]
         q_kd: [0     , 0   , 0  , 0  , 0  , 0  , 0]
 
     grasping_ctrl:
-        q_kp: [50    , 50  , 50 , 50 , 50 , 50 , 50 ]
-        q_kd: [1     , 1   , 1  , 1  , 1  , 1  , 1]
+        q_kp: [100    , 100  , 100 , 100 , 100 , 100 , 100 ]
+        q_kd: [20     , 20   , 20  , 20  , 20  , 20  , 20]

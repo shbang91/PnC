@@ -127,29 +127,20 @@ void ScorpioWorldNode::SetActiveVelocity(const Eigen::VectorXd & des_vel){
 
 void ScorpioWorldNode::customPreStep() {
     t_ = (double)count_ * servo_rate_;
-
-    //Eigen::VectorXd qdot =  scorpio_->getVelocities();
-    //Eigen::VectorXd zerotorque(n_dof_scorpio_);
-    //zerotorque.setZero();
-    //zerotorque =  -0.1*qdot;
-    //scorpio_->setForces(zerotorque);
-
     // =============
     // Scorpio
     // =============
+
+
+    //((ScorpioInterface*)scorpio_interface_) -> moveEndEffectorTo(-0.3,-0.8,1.5,0,0.7071,0,0.7071);
+
     scorpio_sensordata_->q = scorpio_->getPositions();
     scorpio_sensordata_->qdot = scorpio_->getVelocities();
     scorpio_interface_->getCommand(scorpio_sensordata_, scorpio_cmd_);
 
     scorpio_trq_cmd_ = scorpio_cmd_->jtrq;
-    //scorpio_->setForces(scorpio_trq_cmd_);
     SetActiveForce(scorpio_trq_cmd_);
-
-    //std::ofstream myout;
-    //myout.open("/home/seunghyeonbang/Desktop/jpos.txt"); 
-    //myout << scorpio_->getPositions() << std::endl;
-    //myout.close();
-
+    
     count_++;
 }
 
@@ -245,21 +236,21 @@ void ScorpioWorldNode::SetParams_(){
     myUtils::readParameter(control_cfg, "kp", scorpio_kp_);
     myUtils::readParameter(control_cfg, "kd", scorpio_kd_);
 
-    myUtils::pretty_print(Amp_, std::cout, "Amp");
-    myUtils::pretty_print(Freq_, std::cout, "Freq");
-    std::cout<<"sim_case: "<<sim_case_ <<std::endl;
+    //myUtils::pretty_print(Amp_, std::cout, "Amp");
+    //myUtils::pretty_print(Freq_, std::cout, "Freq");
+    //std::cout<<"sim_case: "<<sim_case_ <<std::endl;
     
-    if(actuator_type_ == 0)
-        std::cout<<"actuator_type: servo "<<std::endl;
-    else
-        std::cout<<"actuator_type: force "<<std::endl;
+    //if(actuator_type_ == 0)
+        //std::cout<<"actuator_type: servo "<<std::endl;
+    //else
+        //std::cout<<"actuator_type: force "<<std::endl;
 
-    if(control_type_ == 0)
-        std::cout<<"control_type: joint space " <<std::endl;
-    else if(control_type_ == 1)
-        std::cout<<"control_type: operational space " <<std::endl;
-    else
-        std::cout<<"control_type: not defined " <<std::endl;
+    //if(control_type_ == 0)
+        //std::cout<<"control_type: joint space " <<std::endl;
+    //else if(control_type_ == 1)
+        //std::cout<<"control_type: operational space " <<std::endl;
+    //else
+        //std::cout<<"control_type: not defined " <<std::endl;
 
 }
 

@@ -42,7 +42,7 @@ void OSC::makeTorque(const std::vector<Task*> & task_list,
     Eigen::VectorXd JtDotQdot, xddot, qddot_pre;
     task->getTaskJacobian(Jt);
     //task->getTaskJacobianDotQdot(JtDotQdot);
-    JtPre = Jt;
+    JtPre = Jt * Nci_;
     //_WeightedInverse(JtPre, Ainv_, JtPreBar);
     myUtils::weightedInverse(JtPre, Ainv_, JtPreBar);
     N_pre = Eigen::MatrixXd::Identity(num_qdot_, num_qdot_)
@@ -53,7 +53,7 @@ void OSC::makeTorque(const std::vector<Task*> & task_list,
     for (int i = 1; i < task_list.size(); ++i) {
         task = task_list[i];
         task->getTaskJacobian(Jt);
-        JtPre = Jt * N_pre;
+        JtPre = Jt ;
         //_WeightedInverse(JtPre, Ainv_, JtPreBar);
         myUtils::weightedInverse(JtPre, Ainv_, JtPreBar);
         N_pre = Eigen::MatrixXd::Identity(num_qdot_, num_qdot_)
@@ -62,7 +62,7 @@ void OSC::makeTorque(const std::vector<Task*> & task_list,
         qddot_des += JtPreBar * xddot;
     }
 
-    if (false) {
+    if (true) {
         Eigen::MatrixXd SN_c_J_q = SN_c_bar.transpose()*JtPre;
         Eigen::JacobiSVD<Eigen::MatrixXd> svd4(
                 SN_c_J_q, Eigen::ComputeThinU | Eigen::ComputeThinV);

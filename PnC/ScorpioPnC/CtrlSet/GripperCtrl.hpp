@@ -37,4 +37,6 @@ class GripperCtrl : public Controller {
     Eigen::MatrixXd Jc_;
     ScorpioStateProvider* sp_;
     double ctrl_start_time_;
+
+    int count_;
 };

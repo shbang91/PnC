@@ -195,25 +195,46 @@ void OSCPosCtrl::oneStep(void* _cmd) {
     Eigen::MatrixXd J_end_effector_bar = Eigen::MatrixXd::Zero(robot_->getNumDofs(),6);
     myUtils::weightedInverse(J_end_effector,robot_->getInvMassMatrix(),J_end_effector_bar);
 
+    //Eigen::MatrixXd J_end_U = J_end_effector*S.transpose();
+    
+    //Eigen::JacobiSVD<Eigen::MatrixXd> svd0(
+     //J_end_U, Eigen::ComputeThinU | Eigen::ComputeThinV);
+     //std::cout << " J_end_U" << std::endl; 
+     //std::cout << svd0.singularValues() << std::endl;
+     //std::cout << "============================" << std::endl;
+
+
      //Eigen::JacobiSVD<Eigen::MatrixXd> svd(
      //J_end_effector, Eigen::ComputeThinU | Eigen::ComputeThinV);
      //std::cout << " J_end_effector" << std::endl; 
      //std::cout << svd.singularValues() << std::endl;
      //std::cout << "============================" << std::endl;
 
-     //Eigen::JacobiSVD<Eigen::MatrixXd> svd1(
-     //J_end_effector_bar, Eigen::ComputeThinU | Eigen::ComputeThinV);
-     //std::cout << " J_end_effector_bar" << std::endl; 
-     //std::cout << svd1.singularValues() << std::endl;
-     //std::cout << "============================" << std::endl;
-    
+     Eigen::JacobiSVD<Eigen::MatrixXd> svd1(
+     J_end_effector_bar, Eigen::ComputeThinU | Eigen::ComputeThinV);
+     std::cout << " J_end_effector_bar" << std::endl; 
+     std::cout << svd1.singularValues() << std::endl;
+     std::cout << "============================" << std::endl;
+
+     Eigen::JacobiSVD<Eigen::MatrixXd> svd2(
+     SN_c.transpose() * J_end_effector_bar, Eigen::ComputeThinU | Eigen::ComputeThinV);
+     std::cout << " SN_c.transpose * J_end_effector_bar" << std::endl; 
+     std::cout << svd2.singularValues() << std::endl;
+     std::cout << "============================" << std::endl;
+
     Eigen::MatrixXd N_end_effector = Eigen::MatrixXd::Identity(Scorpio::n_dof,Scorpio::n_dof) - J_end_effector_bar * J_end_effector; 
     Eigen::VectorXd qddot_des_end_effector = Eigen::VectorXd::Zero(robot_->getNumDofs());
 
     qddot_des_end_effector = J_end_effector_bar * (end_effector_acc_des);
 
+     //Eigen::JacobiSVD<Eigen::MatrixXd> svd9(
+     //N_end_effector, Eigen::ComputeThinU | Eigen::ComputeThinV);
+     //std::cout << " N_end_effector" << std::endl; 
+     //std::cout << svd9.singularValues() << std::endl;
+     //std::cout << "============================" << std::endl;
+
    Eigen::MatrixXd J_q = S;
-   J_q = J_q*N_end_effector;
+   //J_q = J_q*N_end_effector;
    Eigen::VectorXd qddot_des_q = Eigen::VectorXd::Zero(Scorpio::n_dof); 
    Eigen::VectorXd joint_des_acc = Eigen::VectorXd::Zero(Scorpio::n_adof);
    Eigen::MatrixXd J_q_N_end_effector = J_q * N_end_effector;
@@ -222,43 +243,70 @@ void OSCPosCtrl::oneStep(void* _cmd) {
 
    for (int i = 0; i < Scorpio::n_adof; ++i) {
       joint_des_acc[i] = q_kp_[i] * (ini_pos_q[active_joint_idx_[i]] - robot_->getQ()[active_joint_idx_[i]])
-                        + q_kd_[i] * (ini_vel_q[active_joint_idx_[i]] - robot_->getQdot()[active_joint_idx_[i]]);
+                        + q_kd_[i] * ( -robot_->getQdot()[active_joint_idx_[i]]);
    }
 
     qddot_des_q = J_q_N_end_effector_bar * (joint_des_acc); 
 
+    //TEST
+    //std::cout << "J_end * q_2_ddot" << std::endl;
+    //std::cout <<  J_end_effector * qddot_des_q << std::endl;
+    //myUtils::pretty_print(J_end_effector * qddot_des_q , std::cout, "J_end * q_2_ddot");
     //myUtils::pretty_print(joint_des_acc, std::cout, "joint_des_acc");
     //myUtils::pretty_print(qddot_des_q , std::cout, "qddot_des_q");
 
-     //Eigen::JacobiSVD<Eigen::MatrixXd> svd3(
-     //J_end_effector, Eigen::ComputeThinU | Eigen::ComputeThinV);
-     //std::cout << " J_q_N_end_effector" << std::endl;
-     //std::cout << svd3.singularValues() << std::endl;
+
+    //myUtils::pretty_print(N_end_effector , std::cout, "N_end_effector");
+    //Eigen::MatrixXd N_end_effector_nc = N_c*N_end_effector;
+    //myUtils::pretty_print(N_end_effector_nc , std::cout, "N_end_effector_nc");
+
+
+     std::cout << "============================" << std::endl;
+     Eigen::JacobiSVD<Eigen::MatrixXd> svd3(
+     J_q_N_end_effector_bar, Eigen::ComputeThinU | Eigen::ComputeThinV);
+     std::cout << " J_q_N_end_effector_bar" << std::endl;
+     std::cout << svd3.singularValues() << std::endl;
+     std::cout << "============================" << std::endl;
+     //TEST
+     
+    //Eigen::MatrixXd J_q_N_end_U = J_q_N_end_effector*S.transpose();
+
+     //std::cout << "============================" << std::endl;
+     //Eigen::JacobiSVD<Eigen::MatrixXd> svd4(
+     //J_q_N_end_U, Eigen::ComputeThinU | Eigen::ComputeThinV);
+     //std::cout << " J_q_N_end_U" << std::endl;
+     //std::cout << svd4.singularValues() << std::endl;
      //std::cout << "============================" << std::endl;
  
-    Eigen::MatrixXd SN_c_J_q = SN_c_bar.transpose()* J_q_N_end_effector_bar;
+    Eigen::MatrixXd SN_c_J_q = SN_c.transpose()* J_q_N_end_effector_bar;
 
     //Eigen::JacobiSVD<Eigen::MatrixXd> svd5(
      //J_end_effector * SN_c.transpose(), Eigen::ComputeThinU | Eigen::ComputeThinV);
      //std::cout << "J_end_SN_c_transpose" << std::endl; 
      //std::cout << svd5.singularValues() << std::endl;
      //std::cout << "============================" << std::endl;
-
+     //
      //Eigen::JacobiSVD<Eigen::MatrixXd> svd6(
-     //J_q_N_end_effector * SN_c.transpose(), Eigen::ComputeThinU | Eigen::ComputeThinV);
+     //J_q_N_end_effector *S *N_c , Eigen::ComputeThinU | Eigen::ComputeThinV);
      //std::cout << "posture task feasibility" << std::endl; 
      //std::cout << svd6.singularValues() << std::endl;
-     //std::cout << "============================" << std::endl;
+     
+    //TODO:feasibility check
+     Eigen::JacobiSVD<Eigen::MatrixXd> svd6(
+     J_q_N_end_effector * N_c*S.transpose() , Eigen::ComputeThinU | Eigen::ComputeThinV);
+     std::cout << "posture task feasibility" << std::endl; 
+     std::cout << svd6.singularValues() << std::endl;
+     std::cout << "============================" << std::endl;
 
-    //Eigen::JacobiSVD<Eigen::MatrixXd> svd4(
-     //SN_c_J_q, Eigen::ComputeThinU | Eigen::ComputeThinV);
-     //std::cout << "S_N_J_q" << std::endl; 
-     //std::cout << svd4.singularValues() << std::endl;
-     //std::cout << "============================" << std::endl;
+    Eigen::JacobiSVD<Eigen::MatrixXd> svd4(
+     SN_c_J_q, Eigen::ComputeThinU | Eigen::ComputeThinV);
+     std::cout << "S_N_J_q" << std::endl; 
+     std::cout << svd4.singularValues() << std::endl;
+     std::cout << "============================" << std::endl;
 
 
- 
     gamma = SN_c_bar.transpose() * N_c.transpose() * (robot_->getMassMatrix() * (qddot_des_end_effector + qddot_des_q) + b_c);
+    //gamma = SN_c_bar.transpose() *  (robot_->getMassMatrix() * (qddot_des_end_effector + qddot_des_q) + b_c);
 
      //Gravity Comp
     //gamma = SN_c_bar.transpose() * N_c.transpose() * b_c;

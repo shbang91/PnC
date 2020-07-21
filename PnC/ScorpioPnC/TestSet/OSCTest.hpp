@@ -12,6 +12,8 @@ class OSCTest : public Test {
 
     virtual void TestInitialization();
 
+    void _resetMoveParameters(const Eigen::VectorXd& pos, const Eigen::VectorXd& ori);
+
    protected:
     void _ParameterSetting();
     virtual int _NextPhase(const int& phase);

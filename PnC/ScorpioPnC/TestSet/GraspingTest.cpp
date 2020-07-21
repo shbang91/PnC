@@ -31,8 +31,8 @@ void GraspingTest::TestInitialization() {
 int GraspingTest::_NextPhase(const int& phase) {
     int nx_phase = phase + 1;
     printf("[GRASPING TEST] next phase: %d\n", nx_phase);
-    if (phase == NUM_GRASPING_PH) {
-        nx_phase = HOLD_PH;
+    if (nx_phase == GRASPING_TEST_PHASE::NUM_GRASPING_PH) {
+        nx_phase = GRASPING_TEST_PHASE::HOLD_PH;
     }
     return nx_phase;
 }
@@ -45,6 +45,10 @@ void GraspingTest::_ParameterSetting() {
         double tmp_val;
         myUtils::readParameter(test_cfg, "moving_duration", tmp_val);
         ((OSCCtrl*)move_ctrl_)->setEndTime(tmp_val);
+        myUtils::readParameter(test_cfg, "end_effector_target_pos", tmp_vec);
+        ((OSCCtrl*)move_ctrl_)->setTargetPosition(tmp_vec);
+        myUtils::readParameter(test_cfg, "end_effector_target_ori", tmp_vec);
+        ((OSCCtrl*)move_ctrl_)->setTargetOrientation(tmp_vec);
 
     } catch (std::runtime_error& e) {
         std::cout << "Error reading parameter [" << e.what() << "] at file: ["

@@ -11,7 +11,8 @@
 
 GripperCtrl::GripperCtrl(RobotSystem* _robot) : Controller(_robot) {
     myUtils::pretty_constructor(2, "Gripper Ctrl");
-
+    
+    count_ = 0;
     q_kp_ = Eigen::VectorXd::Zero(Scorpio::n_adof);
     q_kd_ = Eigen::VectorXd::Zero(Scorpio::n_adof);
     ini_pos_q_ = Eigen::VectorXd::Zero(robot_->getNumDofs());
@@ -24,7 +25,10 @@ GripperCtrl::GripperCtrl(RobotSystem* _robot) : Controller(_robot) {
     sp_ = ScorpioStateProvider::getStateProvider(_robot);
 }
 
-GripperCtrl::~GripperCtrl() {}
+GripperCtrl::~GripperCtrl() {
+    delete joint_task_;
+    delete osc_;
+}
 
 void GripperCtrl::_build_active_joint_idx(){
     active_joint_idx_.resize(Scorpio::n_adof);
@@ -66,6 +70,7 @@ void GripperCtrl::oneStep(void* _cmd) {
     _PostProcessing_Command();
 
     ((ScorpioCommand*)_cmd)->jtrq = gamma;
+    ++count_;
 }
 
 void GripperCtrl::_task_setup(){
@@ -97,6 +102,7 @@ void GripperCtrl::firstVisit() {
     state_machine_time_= 0.;
     ctrl_start_time_ = 0.;
     ini_pos_q_ = robot_->getQ();
+    myUtils::pretty_print(ini_pos_q_, std::cout, "ini_pos_q");
 }
 
 void GripperCtrl::lastVisit() {

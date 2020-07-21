@@ -63,3 +63,9 @@ void OSCTest::_ParameterSetting() {
         exit(0);
     }
 }
+
+void OSCTest::_resetMoveParameters(const Eigen::VectorXd& pos, const Eigen::VectorXd &ori){
+    ((OSCPosCtrl*)osc_pos_ctrl_)->setTargetPosition(pos);
+    ((OSCPosCtrl*)osc_pos_ctrl_)->setTargetOrientation(ori);
+
+}
