@@ -57,6 +57,6 @@ void GraspingTest::_ParameterSetting() {
     }
 }
 
-void GraspingTest::SetMovingTarget(Eigen::VectorXd pos){
+void GraspingTest::SetMovingTarget(const Eigen::VectorXd& pos){
     ((OSCCtrl*)move_ctrl_)->setRelativeTargetPosition(pos);
 }

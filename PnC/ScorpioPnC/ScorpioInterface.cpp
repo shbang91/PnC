@@ -18,7 +18,7 @@ ScorpioInterface::ScorpioInterface() : EnvInterface() {
     myUtils::pretty_constructor(0, "Scorpio Interface");
 
     robot_ = new RobotSystem(
-        4, THIS_COM "RobotModel/Robot/Scorpio/Scorpio_Kin.urdf");
+        4, THIS_COM "RobotModel/Robot/Scorpio/Scorpio_Kin_robotiq.urdf");
      //robot_->printRobotInfo();
     sp_ = ScorpioStateProvider::getStateProvider(robot_);
 
@@ -110,7 +110,7 @@ bool ScorpioInterface::IsReadyToMove(){
 
 void ScorpioInterface::MoveEndEffectorTo(double x, double y, double z) {
     std::cout << "-------------------------------" << std::endl;
-    std::cout << "Scorpio1 Move to : " << x << ", " << y << ", " << z << std::endl;
+    std::cout << "Scorpio Move to : " << x << ", " << y << ", " << z << std::endl;
     if (sp_->phase_copy == GRASPING_TEST_PHASE::HOLD_PH && !(sp_->is_opening) && !(sp_->is_closing) || sp_->is_holding) {
         sp_->is_moving = true;
         Eigen::VectorXd des_pos = Eigen::VectorXd::Zero(3);

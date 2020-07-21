@@ -15,7 +15,7 @@ class GraspingTest : public Test {
 
     virtual void TestInitialization();
 
-    void SetMovingTarget(Eigen::VectorXd pos);
+    void SetMovingTarget(const Eigen::VectorXd& pos);
 
    protected:
     void _ParameterSetting();
