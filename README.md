@@ -7,7 +7,7 @@ and stabilizing the system over the trajectories.
 ### Clone the repository
 Make sure [Git Lfs](https://git-lfs.github.com/) is also installed for large file meshes.
 ```
-$ cd 'your workspace' && git clone --recurse https://github.com/junhyeokahn/PnC.git
+$ cd 'your workspace' && git clone --recurse https://github.com/shbang91/PnC.git
 ```
 
 ### Install Required Dependancies
@@ -21,5 +21,5 @@ $ cd 'your workspace' && git clone --recurse https://github.com/junhyeokahn/PnC.
 ```
 $ mkdir build && cd build && cmake..
 $ make -j
-$ ./bin/run_draco
+$ ./bin/run_scorpio
 ```
