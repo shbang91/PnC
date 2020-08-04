@@ -45,52 +45,62 @@ ScorpioInterface::~ScorpioInterface() {
 void ScorpioInterface::getCommand(void* _data, void* _command) { 
     ScorpioCommand* cmd = ((ScorpioCommand*)_command);
     ScorpioSensorData* data = ((ScorpioSensorData*)_data);
+    std::cout << "===============gettin command from interface with data==========================" << std::endl;
 
     if (!Initialization_(data, cmd)) {
         //state_estimator_->Update(data);
+        std::cout << "===============initialization not done==========================" << std::endl;
         robot_->updateSystem(data->q, data->qdot, true);
+        std::cout << "===============system updated==========================" << std::endl;
         test_->getCommand(cmd);
+        std::cout << "===============command got from test==========================" << std::endl;
         //CropTorque_(cmd);
     }
+
+    std::cout << "===============past get command initialization==========================" << std::endl;
 
     ++count_;
     running_time_ = (double)(count_)*ScorpioAux::ServoRate;
     sp_->curr_time = running_time_;
     sp_->phase_copy = test_->getPhase(); 
+    std::cout << "===============got phase from test==========================" << std::endl;
 }
 
 void ScorpioInterface::_ParameterSetting() {
-    try {
-        YAML::Node cfg =
-            YAML::LoadFile(THIS_COM "Config/Scorpio/INTERFACE.yaml");
-        std::string test_name =
-            myUtils::readParameter<std::string>(cfg, "test_name");
-        if (test_name == "osc_test") {
-            test_ = new OSCTest(robot_);
-        }
-        else if (test_name == "grasping_test") {
+    // try {
+    //     YAML::Node cfg =
+    //         YAML::LoadFile(THIS_COM "Config/Scorpio/INTERFACE.yaml");
+    //     std::string test_name =
+    //         myUtils::readParameter<std::string>(cfg, "test_name");
+    //     if (test_name == "osc_test") {
+    //         test_ = new OSCTest(robot_);
+    //     }
+    //     else if (test_name == "grasping_test") {
             test_ = new GraspingTest(robot_);
-        }
-        else {
-            printf(
-                "[Scorpio Interface] There is no test matching test with "
-                "the name\n");
-            exit(0);
-        }
-    } catch (std::runtime_error& e) {
-        std::cout << "Error reading parameter [" << e.what() << "] at file: ["
-                  << __FILE__ << "]" << std::endl
-                  << std::endl;
-        exit(0);
-    }
+    //     }
+    //     else {
+    //         printf(
+    //             "[Scorpio Interface] There is no test matching test with "
+    //             "the name\n");
+    //         exit(0);
+    //     }
+    // } catch (std::runtime_error& e) {
+    //     std::cout << "Error reading parameter [" << e.what() << "] at file: ["
+    //               << __FILE__ << "]" << std::endl
+    //               << std::endl;
+    //     exit(0);
+    // }
 }
 
 bool ScorpioInterface::Initialization_(ScorpioSensorData* _sensor_data,
                                         ScorpioCommand* _command) {
+    std::cout << "===============entered initialization of scorpio interface==========================" << std::endl;
     if (!test_initialized) {
         test_->TestInitialization();
+        std::cout << "===============test init'ed==========================" << std::endl;
         test_initialized = true;
         DataManager::GetDataManager()->start();
+        std::cout << "===============data manager started==========================" << std::endl;
     }
     //if (count_ < waiting_count_) {
         //state_estimator_->Initialization(_sensor_data);
