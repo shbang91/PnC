@@ -20,6 +20,10 @@ OSCCtrl::OSCCtrl(RobotSystem* _robot) : Controller(_robot) {
     ini_pos_q_ = Eigen::VectorXd::Zero(robot_->getNumDofs());
     q_kp_ = Eigen::VectorXd::Zero(Scorpio::n_adof);
     q_kd_ = Eigen::VectorXd::Zero(Scorpio::n_adof);
+    lin_kp_ = Eigen::VectorXd::Zero(3);
+    lin_kd_ = Eigen::VectorXd::Zero(3);
+    ori_kp_ = Eigen::VectorXd::Zero(3);
+    ori_kd_ = Eigen::VectorXd::Zero(3);
     ini_ori_ = Eigen::Quaternion<double> (1,0,0,0);
     target_ori_ = Eigen::Quaternion<double> (1,0,0,0);
     relative_target_ori_ = Eigen::Quaternion<double> (1,0,0,0);
@@ -203,20 +207,35 @@ bool OSCCtrl::endOfPhase() {
 }
 
 void OSCCtrl::ctrlInitialization(const YAML::Node& node) {
-    try {
-        myUtils::readParameter(node, "q_kp", q_kp_);
-        myUtils::readParameter(node, "q_kd", q_kd_);
-        joint_task_->setGain(q_kp_, q_kd_);
-        myUtils::readParameter(node, "lin_kp", lin_kp_);
-        myUtils::readParameter(node, "lin_kd", lin_kd_);
-        ee_pos_task_->setGain(lin_kp_, lin_kd_);
-        myUtils::readParameter(node, "ori_kp", ori_kp_);
-        myUtils::readParameter(node, "ori_kd", ori_kd_);
-        ee_ori_task_->setGain(ori_kp_, ori_kd_);
-    } catch (std::runtime_error& e) {
-        std::cout << "Error reading parameter [" << e.what() << "] at file: ["
-            << __FILE__ << "]" << std::endl
-            << std::endl;
-        exit(0);
-    }
+    // try {
+    //     myUtils::readParameter(node, "q_kp", q_kp_);
+    //     myUtils::readParameter(node, "q_kd", q_kd_);
+    //     joint_task_->setGain(q_kp_, q_kd_);
+    //     myUtils::readParameter(node, "lin_kp", lin_kp_);
+    //     myUtils::readParameter(node, "lin_kd", lin_kd_);
+    //     ee_pos_task_->setGain(lin_kp_, lin_kd_);
+    //     myUtils::readParameter(node, "ori_kp", ori_kp_);
+    //     myUtils::readParameter(node, "ori_kd", ori_kd_);
+    //     ee_ori_task_->setGain(ori_kp_, ori_kd_);
+    // } catch (std::runtime_error& e) {
+    //     std::cout << "Error reading parameter [" << e.what() << "] at file: ["
+    //         << __FILE__ << "]" << std::endl
+    //         << std::endl;
+    //     exit(0);
+    // }
+    //std::vector<double> q_kp = {10    , 10  , 10 , 10 , 10 , 10 , 10};
+    q_kp_ << 10, 10, 10, 10, 10, 10, 10;
+    //std::vector<double> q_kd = {1     , 1   , 1  , 1  , 1  , 1  , 1};
+    q_kd_ << 1, 1, 1, 1, 1, 1, 1;
+    joint_task_->setGain(q_kp_, q_kd_);
+    //std::vector<double> lin_kp = {200.0f , 200.0f , 200.0f};
+    lin_kp_ << 200, 200, 200;
+    //std::vector<double> lin_kd = {20.0f  , 20.0f  , 20.0f};
+    lin_kd_ << 20, 20, 20;
+    ee_pos_task_->setGain(lin_kp_, lin_kd_);
+    //std::vector<double> ori_kp = {200.0f , 200.0f , 200.0f};
+    ori_kp_ << 200, 200, 200;
+    //std::vector<double> ori_kd = {20.0f  , 20.0f  , 20.0f};
+    ori_kd_ << 20, 20, 20;
+    ee_ori_task_->setGain(ori_kp_, ori_kd_);
 }

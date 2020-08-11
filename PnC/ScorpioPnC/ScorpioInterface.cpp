@@ -45,25 +45,18 @@ ScorpioInterface::~ScorpioInterface() {
 void ScorpioInterface::getCommand(void* _data, void* _command) { 
     ScorpioCommand* cmd = ((ScorpioCommand*)_command);
     ScorpioSensorData* data = ((ScorpioSensorData*)_data);
-    std::cout << "===============gettin command from interface with data==========================" << std::endl;
 
     if (!Initialization_(data, cmd)) {
         //state_estimator_->Update(data);
-        std::cout << "===============initialization not done==========================" << std::endl;
         robot_->updateSystem(data->q, data->qdot, true);
-        std::cout << "===============system updated==========================" << std::endl;
         test_->getCommand(cmd);
-        std::cout << "===============command got from test==========================" << std::endl;
         //CropTorque_(cmd);
     }
-
-    std::cout << "===============past get command initialization==========================" << std::endl;
 
     ++count_;
     running_time_ = (double)(count_)*ScorpioAux::ServoRate;
     sp_->curr_time = running_time_;
     sp_->phase_copy = test_->getPhase(); 
-    std::cout << "===============got phase from test==========================" << std::endl;
 }
 
 void ScorpioInterface::_ParameterSetting() {
@@ -94,13 +87,10 @@ void ScorpioInterface::_ParameterSetting() {
 
 bool ScorpioInterface::Initialization_(ScorpioSensorData* _sensor_data,
                                         ScorpioCommand* _command) {
-    std::cout << "===============entered initialization of scorpio interface==========================" << std::endl;
     if (!test_initialized) {
         test_->TestInitialization();
-        std::cout << "===============test init'ed==========================" << std::endl;
         test_initialized = true;
         DataManager::GetDataManager()->start();
-        std::cout << "===============data manager started==========================" << std::endl;
     }
     //if (count_ < waiting_count_) {
         //state_estimator_->Initialization(_sensor_data);

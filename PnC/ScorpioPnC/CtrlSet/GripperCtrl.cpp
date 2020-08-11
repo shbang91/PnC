@@ -132,14 +132,19 @@ bool GripperCtrl::endOfPhase() {
 }
 
 void GripperCtrl::ctrlInitialization(const YAML::Node& node) {
-    try {
-        myUtils::readParameter(node, "q_kp", q_kp_);
-        myUtils::readParameter(node, "q_kd", q_kd_);
-        joint_task_->setGain(q_kp_, q_kd_);
-    } catch (std::runtime_error& e) {
-        std::cout << "Error reading parameter [" << e.what() << "] at file: ["
-            << __FILE__ << "]" << std::endl
-            << std::endl;
-        exit(0);
-    }
+    // try {
+    //     myUtils::readParameter(node, "q_kp", q_kp_);
+    //     myUtils::readParameter(node, "q_kd", q_kd_);
+    //     joint_task_->setGain(q_kp_, q_kd_);
+    // } catch (std::runtime_error& e) {
+    //     std::cout << "Error reading parameter [" << e.what() << "] at file: ["
+    //         << __FILE__ << "]" << std::endl
+    //         << std::endl;
+    //     exit(0);
+    // }
+    //std::vector<double> q_kp = {100, 100  , 100 , 100 , 100 , 100 , 100};
+    q_kp_ << 100, 100, 100, 100, 100, 100, 100;
+    //std::vector<double> q_kd = {20     , 20   , 20  , 20  , 20  , 20  , 20};
+    q_kd_ << 20, 20, 20, 20, 20, 20, 20;
+    joint_task_->setGain(q_kp_, q_kd_);
 }

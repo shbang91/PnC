@@ -20,14 +20,11 @@ class Test {
 
     virtual void TestInitialization() = 0;
     void getCommand(void* _command) {
-        std::cout << "===============entered test command==========================" << std::endl;
         if (b_first_visit_) {
             state_list_[phase_]->firstVisit();
-            std::cout << "===============first visit state list init==========================" << std::endl;
             b_first_visit_ = false;
         }
         state_list_[phase_]->oneStep(_command);
-        std::cout << "===============single step performed==========================" << std::endl;
         if (state_list_[phase_]->endOfPhase()) {
             state_list_[phase_]->lastVisit();
             phase_ = _NextPhase(phase_);
