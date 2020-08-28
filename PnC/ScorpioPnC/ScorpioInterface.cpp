@@ -108,14 +108,17 @@ bool ScorpioInterface::IsReadyToMove(){
     }
 }
 
-void ScorpioInterface::MoveEndEffectorTo(double x, double y, double z) {
+void ScorpioInterface::MoveEndEffectorTo(double x, double y, double z, double quat_w, double quat_x, double quat_y, double quat_z) {
     std::cout << "-------------------------------" << std::endl;
-    std::cout << "Scorpio Move to : " << x << ", " << y << ", " << z << std::endl;
+    std::cout << "Scorpio Move to pos: " << x << ", " << y << ", " << z << std::endl;
+    std::cout << "Scorpio Move to ori: " << quat_w << ", " << quat_x << ", " << quat_y << "," << quat_z << std::endl;
     if (sp_->phase_copy == GRASPING_TEST_PHASE::HOLD_PH && !(sp_->is_opening) && !(sp_->is_closing) || sp_->is_holding) {
         sp_->is_moving = true;
         Eigen::VectorXd des_pos = Eigen::VectorXd::Zero(3);
+        Eigen::VectorXd des_ori = Eigen::VectorXd::Zero(4);
         des_pos << x, y, z;
-        ((GraspingTest*)test_)->SetMovingTarget(des_pos);
+        des_ori << quat_w, quat_x, quat_y, quat_z;
+        ((GraspingTest*)test_)->SetMovingTarget(des_pos,des_ori);
     } else {
         std::cout << "Wait" << std::endl;
     }

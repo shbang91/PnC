@@ -107,7 +107,7 @@ bool BasicTask::_UpdateCommand(const Eigen::VectorXd& _pos_des,
 
             // vel_act
             vel_act = robot_->getBodyNodeCoMSpatialVelocity(link_idx_).head(3);
-            // myUtils::pretty_print(pos_err, std::cout, "pos_err in ori");
+             //myUtils::pretty_print(pos_err, std::cout, "pos_err in ori");
             break;
         }
         case BasicTaskType::JOINT: {

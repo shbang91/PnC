@@ -107,7 +107,6 @@ void OSCCtrl::_task_setup(){
     Eigen::VectorXd ee_vel_des = Eigen::VectorXd::Zero(3);
     Eigen::VectorXd ee_acc_des = Eigen::VectorXd::Zero(3);
     for (int i = 0; i < 3; ++i) {
-        target_pos_[i] = ini_pos_[i] + relative_target_pos_[i];
         ee_pos_des[i] = myUtils::smooth_changing(ini_pos_[i], target_pos_[i],
                 end_time_, state_machine_time_);
         ee_vel_des[i] = myUtils::smooth_changing_vel(ini_pos_[i], target_pos_[i],
@@ -123,8 +122,8 @@ void OSCCtrl::_task_setup(){
     // =========================================================================
     double t = myUtils::smooth_changing(0,1,end_time_,state_machine_time_);
     double tdot = myUtils::smooth_changing_vel(0,1,end_time_,state_machine_time_);
+    //double tddot = myUtils::smooth_changing_acc(0,1,end_time_,state_machine_time_);
 
-    target_ori_ =  ini_ori_ ;
     //target_ori_ = relative_target_ori_ * ini_ori_ ;
     Eigen::Quaternion<double> quat_ori_error =
         target_ori_ * (ini_ori_.inverse());
@@ -137,11 +136,11 @@ void OSCCtrl::_task_setup(){
     Eigen::Quaternion<double> curr_quat_des;
     ori_increment = ang_vel * t;
     quat_increment = dart::math::expToQuat(ori_increment);
-    //curr_quat_des = quat_increment * ini_ori_;
-    //curr_ang_vel_des = ang_vel*tdot;
+    curr_quat_des = quat_increment * ini_ori_;
+    curr_ang_vel_des = ang_vel*tdot;
     
-    curr_quat_des = ini_ori_;
-    curr_ang_vel_des = Eigen::VectorXd::Zero(3);
+    //curr_quat_des = ini_ori_;
+    //curr_ang_vel_des = Eigen::VectorXd::Zero(3);
 
     Eigen::VectorXd quat_des = Eigen::VectorXd::Zero(4);
     quat_des << curr_quat_des.w(), curr_quat_des.x(), curr_quat_des.y(), curr_quat_des.z();
@@ -184,6 +183,7 @@ void OSCCtrl::firstVisit() {
     ini_ori_ = Eigen::Quaternion<double> (robot_->getBodyNodeIsometry("end_effector").linear());
 
     //myUtils::pretty_print(ini_ori_, std::cout, "ini_ori_");
+    //myUtils::pretty_print(ini_pos_, std::cout, "ini_pos_");
     //exit(0);
 }
 

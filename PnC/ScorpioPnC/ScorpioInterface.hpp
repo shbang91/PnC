@@ -66,7 +66,7 @@ class ScorpioInterface : public EnvInterface {
     virtual void getCommand(void* _sensor_data, void* _command_data);
 
     bool IsReadyToMove();
-    void MoveEndEffectorTo(double x, double y, double z);
+    void MoveEndEffectorTo(double x, double y, double z, double quat_w, double quat_x, double quat_y, double quat_z);
     bool IsReadyToGrasp();
     void Grasp();
     bool IsReadyToRelease();
