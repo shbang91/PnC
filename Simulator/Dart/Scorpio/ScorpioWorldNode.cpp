@@ -79,7 +79,7 @@ void ScorpioWorldNode::customPreStep() {
     static bool b_move_cmd(true);
     if (((ScorpioInterface*)scorpio_interface_)->IsReadyToMove() && b_move_cmd) {
         std::cout << "First Moving Command Received" << std::endl;
-        ((ScorpioInterface*)scorpio_interface_)->MoveEndEffectorTo(-0.5, 0.4, 1.5, 0.0003,-0.7071 ,0.00025, 0.7071 );
+        ((ScorpioInterface*)scorpio_interface_)->MoveEndEffectorTo(-0.5, 0.4, 1.5, 0.7071, 0.000316, -0.7071 ,0.00025);
         b_move_cmd = false;
     }
 
