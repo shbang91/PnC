@@ -79,32 +79,34 @@ void ScorpioWorldNode::customPreStep() {
     static bool b_move_cmd(true);
     if (((ScorpioInterface*)scorpio_interface_)->IsReadyToMove() && b_move_cmd) {
         std::cout << "First Moving Command Received" << std::endl;
-        ((ScorpioInterface*)scorpio_interface_)->MoveEndEffectorTo(-0.5, 0.4, 1.5, 0.7071, 0.000316, -0.7071 ,0.00025);
+        //((ScorpioInterface*)scorpio_interface_)->MoveEndEffectorTo(-0.5, 0.3, 1.3, 0.7071, 0.000316, -0.7071 ,0.00025);
+        ((ScorpioInterface*)scorpio_interface_)->MoveEndEffectorTo(-0.5, -0.3, 1.3, 0.7071, 0.000316, -0.7071 ,0.00025);
+        //((ScorpioInterface*)scorpio_interface_)->MoveEndEffectorTo(-0.5, 0.4, 1.5, 0.7071, 0.000316, -0.7071 ,0.00025);
         b_move_cmd = false;
     }
 
-    static bool b_grasp_cmd(true);
-    if (((ScorpioInterface*)scorpio_interface_)->IsReadyToGrasp() && b_grasp_cmd) {
-        std::cout << "First Grasping Command Received" << std::endl;
-        ((ScorpioInterface*)scorpio_interface_)->Grasp();
-        b_grasp_cmd = false;
-    }
+    //static bool b_grasp_cmd(true);
+    //if (((ScorpioInterface*)scorpio_interface_)->IsReadyToGrasp() && b_grasp_cmd) {
+        //std::cout << "First Grasping Command Received" << std::endl;
+        //((ScorpioInterface*)scorpio_interface_)->Grasp();
+        //b_grasp_cmd = false;
+    //}
 
-    static bool b_move_while_hold_cmd(true);
-    if (((ScorpioInterface*)scorpio_interface_)->IsReadyToMove() && b_move_while_hold_cmd) {
-        std::cout << "First Moving While Holding Command Received" << std::endl;
+    //static bool b_move_while_hold_cmd(true);
+    //if (((ScorpioInterface*)scorpio_interface_)->IsReadyToMove() && b_move_while_hold_cmd) {
+        //std::cout << "First Moving While Holding Command Received" << std::endl;
         //print_position();
         //Eigen::Vector3d des_rel_pos(0.1,0.1,0.06);
         //((ScorpioInterface*)scorpio_interface_)->MoveEndEffectorTo(des_rel_pos[0], des_rel_pos[2], des_rel_pos[3]);
-        b_move_while_hold_cmd = false;
-    }
+        //b_move_while_hold_cmd = false;
+    //}
 
-    static bool b_release_cmd(true);
-    if (((ScorpioInterface*)scorpio_interface_)->IsReadyToMove() && b_release_cmd) {
-        std::cout << "First Release Command Received" << std::endl;
-        ((ScorpioInterface*)scorpio_interface_)->Release();
-        b_release_cmd = false;
-    }
+    //static bool b_release_cmd(true);
+    //if (((ScorpioInterface*)scorpio_interface_)->IsReadyToMove() && b_release_cmd) {
+        //std::cout << "First Release Command Received" << std::endl;
+        //((ScorpioInterface*)scorpio_interface_)->Release();
+        //b_release_cmd = false;
+    //}
     //static bool b_move_back_to_home(true);
     //if (((ScorpioInterface*)scorpio_interface_)->IsReadyToMove() && b_move_back_to_home) {
         //Eigen::VectorXd rel_pos =  first_scorpio_ini_pos - scorpio_->getBodyNode("end_effector")->getTransform().translation() ;

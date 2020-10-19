@@ -112,6 +112,7 @@ void ScorpioInterface::MoveEndEffectorTo(double x, double y, double z, double qu
     std::cout << "-------------------------------" << std::endl;
     std::cout << "Scorpio Move to pos: " << x << ", " << y << ", " << z << std::endl;
     std::cout << "Scorpio Move to ori: " << quat_w << ", " << quat_x << ", " << quat_y << "," << quat_z << std::endl;
+    std::cout << "-------------------------------" << std::endl;
     if (sp_->phase_copy == GRASPING_TEST_PHASE::HOLD_PH && !(sp_->is_opening) && !(sp_->is_closing) || sp_->is_holding) {
         sp_->is_moving = true;
         Eigen::VectorXd des_pos = Eigen::VectorXd::Zero(3);
