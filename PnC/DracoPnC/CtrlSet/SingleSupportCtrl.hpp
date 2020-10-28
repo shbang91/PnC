@@ -63,6 +63,8 @@ class SingleSupportCtrl : public Controller {
     ContactSpec* rfoot_back_contact_;
     ContactSpec* lfoot_front_contact_;
     ContactSpec* lfoot_back_contact_;
+    //ContactSpec* lfoot_contact_;
+    //ContactSpec* rfoot_contact_;
     std::vector<ContactSpec*> kin_wbc_contact_list_;
 
     KinWBC* kin_wbc_;

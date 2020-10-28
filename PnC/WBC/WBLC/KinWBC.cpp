@@ -45,6 +45,27 @@ bool KinWBC::FindConfiguration(const Eigen::VectorXd& curr_config,
     Eigen::MatrixXd Nc;
     _BuildProjectionMatrix(Jc, Nc);
 
+    //TEST
+    Eigen::MatrixXd U, UNc;
+    U = Eigen::MatrixXd::Zero(num_act_joint_,num_qdot_);
+    for (int i = 0; i < num_act_joint_; ++i) {
+       U(i,act_jidx_[i]) = 1; 
+    }
+    //myUtils::pretty_print(U, std::cout, "selection matrix");
+
+    UNc = U * Nc;
+
+     Eigen::JacobiSVD<Eigen::MatrixXd> svd2(
+     Nc, Eigen::ComputeThinU | Eigen::ComputeThinV);
+     std::cout << "Nc singular value" << std::endl;
+     std::cout << svd2.singularValues() << std::endl;
+
+     Eigen::JacobiSVD<Eigen::MatrixXd> svd1(
+     UNc, Eigen::ComputeThinU | Eigen::ComputeThinV);
+     std::cout << "UNc singular value" << std::endl;
+     std::cout << svd1.singularValues() << std::endl;
+     //TEST
+
     Eigen::VectorXd delta_q, qdot, qddot, JtDotQdot;
     Eigen::MatrixXd Jt, JtPre, JtPre_pinv, N_nx, N_pre;
 

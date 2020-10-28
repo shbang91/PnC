@@ -108,6 +108,8 @@ DoubleSupportCtrl::~DoubleSupportCtrl() {
 }
 
 void DoubleSupportCtrl::oneStep(void* _cmd) {
+    std::cout << "========================" << std::endl;
+    std::cout << "double support phase" << std::endl;
     _PreProcessing_Command();
     state_machine_time_ = sp_->curr_time - ctrl_start_time_;
     sp_->prev_state_machine_time = state_machine_time_;
@@ -593,6 +595,8 @@ void DoubleSupportCtrl::_contact_setup() {
 }
 
 void DoubleSupportCtrl::firstVisit() {
+    std::cout << "========================" << std::endl;
+    std::cout << "double support phase" << std::endl;
     jpos_ini_ = sp_->q.segment(Draco::n_vdof, Draco::n_adof);
     ctrl_start_time_ = sp_->curr_time;
 

@@ -23,17 +23,17 @@ class OSCCtrl : public Controller {
         void setTargetPosition(const Eigen::VectorXd& pos)
         { target_pos_ = pos;}
         void setTargetOrientation(const Eigen::VectorXd& ori) 
-        { target_ori_.w() = ori[0];
-            target_ori_.x() = ori[1];
-            target_ori_.y() = ori[2];
-            target_ori_.z() = ori[3];}
-        void setRelativeTargetPosition(const Eigen::VectorXd& pos)
-        { relative_target_pos_ = pos;}
-        void setRelativeTargetOrientation(const Eigen::VectorXd& ori) 
-        { relative_target_ori_.w() = ori[0];
-          relative_target_ori_.x() = ori[1];
-          relative_target_ori_.y() = ori[2];
-          relative_target_ori_.z() = ori[3];}
+        { target_ori_.x() = ori[0];
+            target_ori_.y() = ori[1];
+            target_ori_.z() = ori[2];
+            target_ori_.w() = ori[3];}
+        //void setRelativeTargetPosition(const Eigen::VectorXd& pos)
+        //{ relative_target_pos_ = pos;}
+        //void setRelativeTargetOrientation(const Eigen::VectorXd& ori) 
+        //{ relative_target_ori_.w() = ori[0];
+          //relative_target_ori_.x() = ori[1];
+          //relative_target_ori_.y() = ori[2];
+          //relative_target_ori_.z() = ori[3];}
 
     protected:
         double end_time_;

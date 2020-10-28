@@ -49,6 +49,7 @@ SingleSupportCtrl::SingleSupportCtrl(RobotSystem* robot, Planner* planner,
     kin_wbc_ = new KinWBC(act_list);
     wblc_ = new WBLC(act_list);
     wblc_data_ = new WBLC_ExtraData();
+
     //rfoot_contact_ = new SurfaceContactSpec(
         //robot_, DracoBodyNode::rFootCenter, 0.085, 0.02, 0.7);
     //lfoot_contact_ = new SurfaceContactSpec(
@@ -67,6 +68,7 @@ SingleSupportCtrl::SingleSupportCtrl(RobotSystem* robot, Planner* planner,
     wblc_data_->W_qddot_ = Eigen::VectorXd::Constant(Draco::n_dof, 100.0);
     wblc_data_->W_rf_ = Eigen::VectorXd::Constant(dim_contact_, 0.1);
     wblc_data_->W_xddot_ = Eigen::VectorXd::Constant(dim_contact_, 1000.0);
+
     //wblc_data_->W_rf_[rfoot_contact_->getFzIndex()] = 0.01;
     //wblc_data_->W_rf_[rfoot_contact_->getDim() + lfoot_contact_->getFzIndex()] =
         //0.01;
@@ -119,6 +121,32 @@ SingleSupportCtrl::SingleSupportCtrl(RobotSystem* robot, Planner* planner,
 
     } else
         printf("[Warnning] swing foot is not foot: %i\n", moving_foot_);
+        //
+    //int rf_idx_offset(0);
+    //if (moving_foot_ == DracoBodyNode::lAnkle) {
+        //rf_idx_offset = rfoot_contact_->getDim();
+        //for (int i(0); i < lfoot_contact_->getDim(); ++i) {
+            //wblc_data_->W_rf_[i + rf_idx_offset] = 5.0;
+            //wblc_data_->W_xddot_[i + rf_idx_offset] = 0.001;
+        //}
+        //wblc_data_->W_rf_[lfoot_contact_->getFzIndex() + rf_idx_offset] = 0.5;
+
+        //((SurfaceContactSpec*)lfoot_contact_)->setMaxFz(0.0001);
+
+        //kin_wbc_contact_list_.push_back(rfoot_contact_);
+
+    //} else if (moving_foot_ == DracoBodyNode::rAnkle) {
+        //for (int i(0); i < rfoot_contact_->getDim(); ++i) {
+            //wblc_data_->W_rf_[i + rf_idx_offset] = 5.0;
+            //wblc_data_->W_xddot_[i + rf_idx_offset] = 0.001;
+        //}
+        //wblc_data_->W_rf_[rfoot_contact_->getFzIndex() + rf_idx_offset] = 0.5;
+
+        //((SurfaceContactSpec*)rfoot_contact_)->setMaxFz(0.0001);
+        //kin_wbc_contact_list_.push_back(lfoot_contact_);
+
+    //} else
+        //printf("[Warnning] swing foot is not foot: %i\n", moving_foot_);
 }
 
 SingleSupportCtrl::~SingleSupportCtrl() {
@@ -142,6 +170,8 @@ SingleSupportCtrl::~SingleSupportCtrl() {
 }
 
 void SingleSupportCtrl::oneStep(void* _cmd) {
+    std::cout << "========================" << std::endl;
+    std::cout << "single support phase" << std::endl;
     _PreProcessing_Command();
     state_machine_time_ = sp_->curr_time - ctrl_start_time_;
     sp_->prev_state_machine_time = state_machine_time_;
@@ -338,9 +368,17 @@ void SingleSupportCtrl::_contact_setup() {
     contact_list_.push_back(rfoot_back_contact_);
     contact_list_.push_back(lfoot_front_contact_);
     contact_list_.push_back(lfoot_back_contact_);
+
+    //rfoot_contact_->updateContactSpec();
+    //lfoot_contact_->updateContactSpec();
+
+    //contact_list_.push_back(rfoot_contact_);
+    //contact_list_.push_back(lfoot_contact_);
 }
 
 void SingleSupportCtrl::firstVisit() {
+    std::cout << "========================" << std::endl;
+    std::cout << "single support phase" << std::endl;
     jpos_ini_ = sp_->q.segment(Draco::n_vdof, Draco::n_adof);
     ctrl_start_time_ = sp_->curr_time;
     SetBSpline_();
