@@ -16,6 +16,8 @@ class ScorpioSensorData {
     ScorpioSensorData() {
         q = Eigen::VectorXd::Zero(Scorpio::n_dof);
         qdot = Eigen::VectorXd::Zero(Scorpio::n_dof);
+        q_act = Eigen::VectorXd::Zero(Scorpio::n_adof);
+        qdot_act = Eigen::VectorXd::Zero(Scorpio::n_adof);
         //passive_q = Eigen::VectorXd::Zero(Scorpio::n_vdof);
         //passive_qdot = Eigen::VectorXd::Zero(Scorpio::n_vdof);
     }
@@ -23,6 +25,8 @@ class ScorpioSensorData {
 
     Eigen::VectorXd q;
     Eigen::VectorXd qdot;
+    Eigen::VectorXd q_act;
+    Eigen::VectorXd qdot_act;
     //Eigen::VectorXd passive_q;
     //Eigen::VectorXd passive_qdot;
 };
@@ -60,6 +64,7 @@ class ScorpioInterface : public EnvInterface {
     Eigen::VectorXd cmd_jtrq_;
 
 
+
    public:
     ScorpioInterface();
     virtual ~ScorpioInterface();
@@ -72,4 +77,7 @@ class ScorpioInterface : public EnvInterface {
     bool IsReadyToRelease();
     void Release();
     void PrintPhase();
+
+    Eigen::VectorXd endeff_pos_;
+    Eigen::Quaternion<double> endeff_ori_;
 };

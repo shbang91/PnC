@@ -35,6 +35,9 @@ ScorpioInterface::ScorpioInterface() : EnvInterface() {
 
     DataManager* data_manager = DataManager::GetDataManager();
     data_manager->RegisterData(&running_time_,DOUBLE,"time",1);
+
+    endeff_pos_ = Eigen::VectorXd::Zero(3);
+    endeff_ori_ = Eigen::Quaternion<double> (1,0,0,0);
 }
 
 ScorpioInterface::~ScorpioInterface() {
@@ -48,6 +51,11 @@ void ScorpioInterface::getCommand(void* _data, void* _command) {
 
     if (!Initialization_(data, cmd)) {
         //state_estimator_->Update(data);
+        sp_->saveCurrentData();
+        data->q_act = sp_->act_q_;
+        data->qdot_act = sp_->act_qdot_;
+        endeff_pos_ = sp_->endeff_pos_;
+        endeff_ori_ = sp_->endeff_ori_;
         robot_->updateSystem(data->q, data->qdot, true);
         test_->getCommand(cmd);
         //CropTorque_(cmd);
