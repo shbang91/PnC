@@ -40,8 +40,8 @@ ScorpioStateProvider::ScorpioStateProvider(RobotSystem* _robot) {
 
 void ScorpioStateProvider::saveCurrentData() {
     for (int i = 0; i < active_joint_idx_.size(); ++i) {
-       act_q_[i] = robot_->getQ()[active_joint_idx_[i]]; 
-       act_qdot_[i] = robot_->getQdot()[active_joint_idx_[i]]; 
+       act_q_[i] = (robot_->getQ())[active_joint_idx_[i]]; 
+       act_qdot_[i] = (robot_->getQdot())[active_joint_idx_[i]]; 
     }
 
     endeff_pos_ = robot_->getBodyNodeIsometry("end_effector").translation();
