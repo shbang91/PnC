@@ -313,7 +313,7 @@ int main(int argc, char** argv) {
     dart::dynamics::SkeletonPtr ground = urdfLoader.parseSkeleton(
         THIS_COM "RobotModel/Ground/ground_terrain.urdf");
     dart::dynamics::SkeletonPtr scorpio = urdfLoader.parseSkeleton(
-        THIS_COM "RobotModel/Robot/Scorpio/Scorpio_Kin_robotiq.urdf");
+        THIS_COM "RobotModel/Robot/Scorpio/Scorpio_Kin_robotiq_gripper.urdf");
     dart::dynamics::SkeletonPtr table = urdfLoader.parseSkeleton(
          THIS_COM "RobotModel/Environment/Table/table.urdf");
 

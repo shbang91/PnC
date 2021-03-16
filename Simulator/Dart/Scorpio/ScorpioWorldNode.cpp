@@ -9,7 +9,7 @@
 ScorpioWorldNode::ScorpioWorldNode(const dart::simulation::WorldPtr& _world)
     : dart::gui::osg::WorldNode(_world), count_(0),  t_(0.0), servo_rate_(0.001){
     world_ = _world;
-    scorpio_ = world_->getSkeleton("Scorpio_Kin");
+    scorpio_ = world_->getSkeleton("Scorpio");
     mGround_ = world_->getSkeleton("ground_skeleton");
     n_dof_scorpio_ = scorpio_->getNumDofs();
     p_dof_scorpio_ = 4;
@@ -80,7 +80,7 @@ void ScorpioWorldNode::customPreStep() {
     if (((ScorpioInterface*)scorpio_interface_)->IsReadyToMove() && b_move_cmd) {
         std::cout << "First Moving Command Received" << std::endl;
         //((ScorpioInterface*)scorpio_interface_)->MoveEndEffectorTo(-0.5, 0.3, 1.3, 0.7071, 0.000316, -0.7071 ,0.00025);
-        ((ScorpioInterface*)scorpio_interface_)->MoveEndEffectorTo(-0.5, -0.3, 1.3,  0.000316, -0.7071 ,0.00025, 0.7071);
+        ((ScorpioInterface*)scorpio_interface_)->MoveEndEffectorTo(0.5, 0.3, 1.3,  0.000316, -0.7071 ,0.00025, 0.7071);
         //((ScorpioInterface*)scorpio_interface_)->MoveEndEffectorTo(-0.5, 0.4, 1.5, 0.7071, 0.000316, -0.7071 ,0.00025);
         b_move_cmd = false;
     }
