@@ -77,6 +77,7 @@ class ScorpioInterface : public EnvInterface {
     bool IsReadyToRelease();
     void Release();
     void PrintPhase();
+    void Interrupt();
 
     Eigen::VectorXd endeff_pos_;
     Eigen::Quaternion<double> endeff_ori_;

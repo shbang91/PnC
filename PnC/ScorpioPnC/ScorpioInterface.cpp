@@ -175,3 +175,9 @@ void ScorpioInterface::Release(){
 void ScorpioInterface::PrintPhase(){
     std::cout << "Scorpio Phase is: " << sp_->phase_copy << std::endl;
 }
+
+void ScorpioInterface::Interrupt(){
+    std::cout << "Scorpio moving is interrupted" << std::endl;
+    sp_->interrupt_flag = true;
+}
+

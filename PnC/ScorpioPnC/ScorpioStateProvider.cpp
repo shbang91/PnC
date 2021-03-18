@@ -14,6 +14,8 @@ ScorpioStateProvider::ScorpioStateProvider(RobotSystem* _robot) {
 
     is_moving = false;
 
+    interrupt_flag = false;
+
     //Gripper Status boolean variable
     is_closing = false;
     is_holding = false;

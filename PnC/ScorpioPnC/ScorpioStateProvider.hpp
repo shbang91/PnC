@@ -35,6 +35,8 @@ class ScorpioStateProvider {
     bool is_holding;
     bool is_opening;
 
+    bool interrupt_flag;
+
     double closing_opening_start_time;
 
     void _build_active_joint_idx(){

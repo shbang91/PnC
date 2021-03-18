@@ -190,6 +190,12 @@ void OSCCtrl::lastVisit() {
 }
 
 bool OSCCtrl::endOfPhase() {
+    if (sp_->interrupt_flag) {
+       sp_->is_moving = false;
+       sp_->interrupt_flag = false; //restore bool type flag
+       return true;
+    }
+
     if (state_machine_time_ > end_time_) {
         //TEST for box initial pos
         //std::cout << "end eff lin6ar pos" << std::endl;
@@ -198,6 +204,7 @@ bool OSCCtrl::endOfPhase() {
         sp_->is_moving = false;
         return true;
     }
+
     return false;
 }
 
